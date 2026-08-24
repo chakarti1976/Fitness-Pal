@@ -203,12 +203,78 @@
   /* bottom nav */
   nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--ink-2);border-top:1px solid var(--line);display:flex;z-index:30}
   nav .inner{max-width:640px;margin:0 auto;width:100%;display:flex}
-  nav button{flex:1;background:none;border:none;color:var(--muted-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;font-size:10px;font-weight:600;letter-spacing:.3px;padding-top:8px}
+  nav button{flex:1;background:none;border:none;color:var(--muted-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font-size:9px;font-weight:600;letter-spacing:.2px;padding-top:8px}
+  nav button svg{width:20px;height:20px}
   nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2}
   nav button.active{color:var(--accent)}
 
   .toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 24px);transform:translateX(-50%) translateY(20px);background:var(--record);color:#0c1a15;padding:12px 20px;border-radius:12px;font-weight:700;font-size:14px;z-index:50;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* cardio */
+  .cardio-card .cardio-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+  .cardio-card .cf{display:flex;align-items:center;gap:6px;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:7px 9px}
+  .cardio-card .cf span{font-size:12px;color:var(--muted);flex:1;white-space:nowrap}
+  .cardio-card .cf input{width:44px;background:transparent;border:none;border-bottom:1px solid var(--line-2);font-family:'Space Mono';font-size:15px;text-align:center;color:var(--text)}
+  .cardio-card .cf input:focus{outline:none;border-color:var(--accent)}
+  .cardio-card .cf small{font-size:10px;color:var(--muted-2)}
+  .burn-disp{margin-top:11px;font-size:13px;color:var(--muted);line-height:1.5}
+  .burn-disp b{color:var(--accent);font-size:17px}
+  .burn-break{font-size:11px;color:var(--muted-2)}
+  /* food */
+  .food-add{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}
+  .food-add>input{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:12px;font-size:14px}
+  .food-add>input:focus{outline:none;border-color:var(--accent)}
+  .food-qty-row{display:flex;gap:8px;align-items:center;margin-top:9px}
+  .food-qty-row input{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:12px;font-family:'Space Mono';font-size:16px;text-align:center}
+  .food-qty-row input:focus{outline:none;border-color:var(--accent)}
+  .food-unit{font-size:13px;color:var(--muted);min-width:26px;text-align:center}
+  .food-qty-row button{background:var(--accent);color:#12151c;border:none;border-radius:11px;padding:0 18px;font-family:'Anton';font-size:14px;letter-spacing:.5px;cursor:pointer}
+  .food-hint{font-size:12px;color:var(--record);margin-top:8px;min-height:14px}
+  .link-btn{background:none;border:none;color:var(--muted);font-size:12px;margin-top:10px;cursor:pointer;text-decoration:underline;padding:0}
+  .manual-box{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+  .manual-box>input{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:14px;margin-bottom:8px}
+  .manual-blocks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px}
+  .manual-blocks label{font-size:10px;color:var(--muted-2);display:block;margin-bottom:3px}
+  .manual-blocks input{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:9px;padding:9px;font-family:'Space Mono';text-align:center}
+  .ztotals{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .zblocks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .zb{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}
+  .zbk{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);display:block}
+  .zbn{font-size:24px;font-weight:700;display:block;margin:2px 0;color:var(--accent)}
+  .zbu{font-size:10px;color:var(--muted-2)}
+  .zcal{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+  .zcal b{font-size:19px;color:var(--text)}
+  .zpct{font-size:12px;color:var(--muted);margin-top:8px}
+  .ztarget{color:var(--muted-2)}
+  .zbal{font-size:13px;margin-top:10px;padding:9px 11px;background:var(--ink-2);border-radius:10px;color:var(--text)}
+  .flog{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:11px 12px;margin-bottom:7px}
+  .fl-name{font-size:14px;font-weight:600}
+  .fl-sub{font-size:12px;color:var(--muted);font-family:'Space Mono';margin-top:2px}
+  .hist-cardio{font-size:12px;color:var(--accent);margin-bottom:10px;font-family:'Space Mono'}
+  /* balance */
+  .bal-main{border-radius:16px;padding:18px;text-align:center;margin-bottom:12px;border:1px solid var(--line)}
+  .bal-main.pos{background:var(--record-dim);border-color:rgba(55,224,176,.3)}
+  .bal-main.neg{background:#3a2320;border-color:rgba(255,107,87,.3)}
+  .bal-main.flat{background:var(--card)}
+  .bal-k{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:700}
+  .bal-v{font-size:40px;font-weight:700;margin:4px 0}
+  .bal-main.pos .bal-v{color:var(--record)} .bal-main.neg .bal-v{color:var(--danger)}
+  .bal-v small{font-size:15px;color:var(--muted)}
+  .bal-note{font-size:12px;color:var(--muted)}
+  .bal-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+  .bstat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .bstat .bk{font-size:11px;color:var(--muted);display:block}
+  .bstat .bv{font-size:22px;font-weight:700;font-family:'Space Mono';display:block;margin-top:3px}
+  .bstat .bd{font-size:10px;color:var(--muted-2)}
+  .bal-tip{background:var(--record-dim);border:1px solid rgba(55,224,176,.25);border-radius:12px;padding:12px;font-size:13px;color:var(--text)}
+  .bal-tip b{color:var(--record)}
+  .bal-fine{font-size:11px;color:var(--muted-2);margin-top:10px;line-height:1.4}
+  .profile-box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .pf-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+  .pf-field label{font-size:11px;color:var(--muted);display:block;margin-bottom:5px}
+  .pf-field select,.pf-field input{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:11px;font-size:14px;color:var(--text)}
+  .pf-field select:focus,.pf-field input:focus{outline:none;border-color:var(--accent)}
+  .pf-note{font-size:11px;color:var(--muted-2);margin-top:9px}
 </style>
 </head>
 <body>
@@ -303,6 +369,60 @@
     <div class="eyebrow" style="margin-top:22px">Дневник на теглото</div>
     <div class="log-list" id="weightList"></div>
   </section>
+
+  <!-- ============ FOOD (Zone) ============ -->
+  <section id="view-food" class="tab-view">
+    <div class="eyebrow">Хранене · Зоната на Бари Сиърс</div>
+    <h2 class="section-title">Храна днес</h2>
+    <p class="sub">1 блок = 7 г протеин / 9 г въглехидрати / 1.5 г мазнина. Целѝ равен брой П/В/М блокове (баланс 40/30/30).</p>
+
+    <div class="food-add">
+      <input list="foodOptions" id="foodPick" placeholder="Търси храна (напр. пилешки гърди)…" autocomplete="off">
+      <datalist id="foodOptions"></datalist>
+      <div class="food-qty-row">
+        <input id="foodQty" type="text" inputmode="decimal" placeholder="колич.">
+        <span id="foodUnit" class="food-unit">г</span>
+        <button id="foodAdd">Добави</button>
+      </div>
+      <div id="foodHint" class="food-hint"></div>
+      <button id="manualToggle" class="link-btn">+ Ръчно въвеждане (блокове)</button>
+      <div id="manualBox" class="manual-box" style="display:none">
+        <input id="mName" type="text" placeholder="Име на храна">
+        <div class="manual-blocks">
+          <div><label>Протеин бл.</label><input id="mP" type="text" inputmode="decimal" placeholder="0"></div>
+          <div><label>Въгл. бл.</label><input id="mC" type="text" inputmode="decimal" placeholder="0"></div>
+          <div><label>Мазн. бл.</label><input id="mF" type="text" inputmode="decimal" placeholder="0"></div>
+        </div>
+        <button id="manualAdd" class="btn-ghost">Добави ръчно</button>
+      </div>
+    </div>
+
+    <div id="foodTotals"></div>
+    <div class="eyebrow" style="margin-top:20px">Днешен дневник</div>
+    <div id="foodLog"></div>
+  </section>
+
+  <!-- ============ BALANCE ============ -->
+  <section id="view-balance" class="tab-view">
+    <div class="eyebrow">Калориен баланс</div>
+    <h2 class="section-title">Баланс днес</h2>
+    <p class="sub">Приети (храна) минус изгорени (базов разход + тренировка).</p>
+    <div id="balanceCard"></div>
+
+    <div class="eyebrow" style="margin-top:22px">Профил за изчисленията</div>
+    <div class="profile-box">
+      <div class="pf-row">
+        <div class="pf-field"><label>Пол</label>
+          <select id="pfSex"><option value="m">Мъж</option><option value="f">Жена</option></select>
+        </div>
+        <div class="pf-field"><label>Възраст</label><input id="pfAge" type="text" inputmode="numeric" placeholder="50"></div>
+        <div class="pf-field"><label>Ръст (см)</label><input id="pfHeight" type="text" inputmode="numeric" placeholder="178"></div>
+      </div>
+      <button id="pfSave" class="btn-ghost">Запази профила</button>
+      <p class="pf-note">Теглото се взима автоматично от таб „Тегло" (последното записано).</p>
+    </div>
+  </section>
+
 </main>
 
 <nav>
@@ -311,9 +431,13 @@
       <svg viewBox="0 0 24 24"><path d="M6 3v4M6 21v-8M18 3v8M18 21v-4M6 13a3 3 0 0 0 0-6M18 11a3 3 0 0 0 0 6"/></svg>
       Днес
     </button>
-    <button data-tab="program">
-      <svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>
-      Програма
+    <button data-tab="food">
+      <svg viewBox="0 0 24 24"><path d="M4 3v7a3 3 0 0 0 6 0V3M7 3v18M17 3c-1.7 0-3 2.5-3 5.5S15.3 14 17 14v7"/></svg>
+      Храна
+    </button>
+    <button data-tab="balance">
+      <svg viewBox="0 0 24 24"><path d="M12 3v18M5 8h14M6 8l-3 6a3 3 0 0 0 6 0zM18 8l-3 6a3 3 0 0 0 6 0z"/></svg>
+      Баланс
     </button>
     <button data-tab="history">
       <svg viewBox="0 0 24 24"><path d="M12 8v4l3 2M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
@@ -322,6 +446,10 @@
     <button data-tab="weight">
       <svg viewBox="0 0 24 24"><path d="M5 21h14M6 21V8l6-4 6 4v13M9 21v-5h6v5"/></svg>
       Тегло
+    </button>
+    <button data-tab="program">
+      <svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg>
+      Прог.
     </button>
   </div>
 </nav>
@@ -345,7 +473,7 @@ const DB = {
     try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ /* storage full or blocked */ }
   }
 };
-const K = { workouts:'elx_workouts', weights:'elx_weights', measure:'elx_measure', draft:'elx_draft' };
+const K = { workouts:'elx_workouts', weights:'elx_weights', measure:'elx_measure', draft:'elx_draft', food:'elx_food', profile:'elx_profile' };
 
 /* ============================================================
    PROGRAM DATA
@@ -506,7 +634,7 @@ function art(p){ const f=EX_ART[p]||EX_ART._default; return `<svg viewBox="0 0 1
 /* ============================================================
    STATE
    ============================================================ */
-let state = { workouts:[], weights:[], measure:[], draft:{} };
+let state = { workouts:[], weights:[], measure:[], draft:{}, food:[], profile:{} };
 let currentDay = 'puA';
 
 function vidUrl(en){ return 'https://www.youtube.com/results?search_query='+encodeURIComponent(en+' proper form technique'); }
@@ -540,7 +668,7 @@ function renderDaySelector(){
   el.querySelectorAll('.day-pill').forEach(p=>p.onclick=()=>{ currentDay=p.dataset.day; renderDaySelector(); renderWorkout(); });
 }
 
-function getDraft(){ if(!state.draft[currentDay]) state.draft[currentDay]={sets:{},notes:'',feel:''}; return state.draft[currentDay]; }
+function getDraft(){ if(!state.draft[currentDay]) state.draft[currentDay]={sets:{},notes:'',feel:'',cardio:{}}; if(!state.draft[currentDay].cardio) state.draft[currentDay].cardio={}; return state.draft[currentDay]; }
 function saveDraft(){ DB.set(K.draft,state.draft); }
 
 function renderWorkout(){
@@ -582,6 +710,19 @@ function renderWorkout(){
     </div>`;
   });
 
+  // cardio + calories
+  const cw=draft.cardio||{};
+  html+=`<div class="session-extras cardio-card">
+    <label>Кардио и калории (Вариант B)</label>
+    <div class="cardio-grid">
+      <div class="cf"><span>🚶 Ходене</span><input data-cardio="walk" type="text" inputmode="numeric" value="${cw.walk||''}" placeholder="0"><small>мин</small></div>
+      <div class="cf"><span>🏃 Бягане</span><input data-cardio="run" type="text" inputmode="numeric" value="${cw.run||''}" placeholder="0"><small>мин</small></div>
+      <div class="cf"><span>🚣 Гребане</span><input data-cardio="row" type="text" inputmode="numeric" value="${cw.row||''}" placeholder="0"><small>мин</small></div>
+      <div class="cf"><span>🏋️ Силова</span><input data-cardio="strength" type="text" inputmode="numeric" value="${(cw.strength!=null&&cw.strength!=='')?cw.strength:''}" placeholder="45"><small>мин</small></div>
+    </div>
+    <div id="burnDisp" class="burn-disp"></div>
+  </div>`;
+
   // session extras
   html+=`<div class="session-extras">
     <label>Бележки за тренировката</label>
@@ -622,6 +763,8 @@ function renderWorkout(){
   document.getElementById('clearDay').onclick=()=>{ if(confirm('Да изчистя въведеното за '+d.name+'?')){ delete state.draft[currentDay]; renderWorkout(); saveDraft(); } };
   area.querySelectorAll('[data-rest]').forEach(b=>b.onclick=()=>startRest(parseInt(b.dataset.rest)));
   document.getElementById('restStop').onclick=stopRest;
+  area.querySelectorAll('[data-cardio]').forEach(inp=>inp.addEventListener('input',ev=>{ getDraft().cardio[ev.target.dataset.cardio]=ev.target.value; saveDraft(); updateBurn(); }));
+  updateBurn();
 }
 
 function renderSets(id){
@@ -664,7 +807,8 @@ function saveWorkout(){
     if(sets.length) exercises.push({id,name:e[1],sets});
   });
   if(!exercises.length){ toast('Въведи поне една серия'); return; }
-  const w={ id:Date.now(), date:todayISO(), dayKey:currentDay, dayName:d.name, exercises, notes:draft.notes||'', feel:draft.feel||'' };
+  const {kcal,mins}=burnFor(draft.cardio);
+  const w={ id:Date.now(), date:todayISO(), dayKey:currentDay, dayName:d.name, exercises, notes:draft.notes||'', feel:draft.feel||'', cardio:mins, burned:kcal };
   state.workouts.push(w);
   DB.set(K.workouts,state.workouts);
   delete state.draft[currentDay];
@@ -705,12 +849,13 @@ function renderHistory(){
       return `<div class="hist-ex"><div class="hn">${ex.name}</div><div class="hs">${sets}</div></div>`;
     }).join('');
     const note=w.notes?`<div class="hist-note">${w.feel?w.feel+' ':''}„${w.notes}“</div>`:(w.feel?`<div class="hist-note">${w.feel}</div>`:'');
+    const cardio=w.burned?`<div class="hist-cardio">🔥 <b class="num">${w.burned.total}</b> kcal · 🚶${w.cardio.walk||0} 🏃${w.cardio.run||0} 🚣${w.cardio.row||0} 🏋️${w.cardio.strength||0} мин</div>`:'';
     return `<div class="hist" data-id="${w.id}">
       <div class="hist-top">
         <div><div class="hist-date">${fmtDate(w.date)} · ${w.date.slice(0,4)}</div><div class="hist-day">${w.dayName}</div></div>
         <div style="text-align:right"><div class="hist-vol">${sessionVolume(w).toLocaleString('bg')} кг обем</div><div style="font-size:18px;color:var(--muted-2)">⌄</div></div>
       </div>
-      <div class="hist-body">${body}${note}
+      <div class="hist-body">${cardio}${body}${note}
         <button class="btn-ghost" data-del="${w.id}" style="margin-top:10px">Изтрий тренировката</button>
       </div>
     </div>`;
@@ -853,6 +998,220 @@ document.getElementById('importBtn').onclick=()=>document.getElementById('import
 document.getElementById('importFile').onchange=e=>{ if(e.target.files[0]) importData(e.target.files[0]); e.target.value=''; };
 
 /* ============================================================
+   CARDIO CALORIES (Variant B — MET based)
+   ============================================================ */
+const MET={walk:4.3, run:8.5, row:7.0, strength:5.0};
+function latestWeight(){ const w=[...state.weights].sort((a,b)=>a.date<b.date?-1:1); return w.length?w[w.length-1].kg:null; }
+function burnFor(cardio){
+  const kg=latestWeight()||80;
+  const s=(cardio&&cardio.strength!=null&&cardio.strength!=='')?(num(cardio.strength)||0):45;
+  const mins={ walk:num(cardio&&cardio.walk)||0, run:num(cardio&&cardio.run)||0, row:num(cardio&&cardio.row)||0, strength:s };
+  const kcal={}; let total=0;
+  for(const k in MET){ kcal[k]=Math.round(MET[k]*kg*(mins[k]/60)); total+=kcal[k]; }
+  kcal.total=total;
+  return {kcal,mins};
+}
+function updateBurn(){
+  const el=document.getElementById('burnDisp'); if(!el) return;
+  const kg=latestWeight();
+  const {kcal}=burnFor(getDraft().cardio);
+  const note=kg?'':' (при 80 кг — запиши тегло за точност)';
+  el.innerHTML=`Изгорени ≈ <b class="num">${kcal.total}</b> kcal${note}<br><span class="burn-break">🚶 ${kcal.walk} · 🏃 ${kcal.run} · 🚣 ${kcal.row} · 🏋️ ${kcal.strength}</span>`;
+}
+
+/* ============================================================
+   ZONE FOOD DATABASE — [име, тип(P/C/F/M), единица, грама-за-1-блок ( M: pPer, cPer )]
+   Извлечено от таблицата на потребителя. 1 блок = 7г П / 9г В / 1.5г М.
+   ============================================================ */
+const FOODS=[
+  // ---- ПРОТЕИНИ ----
+  ['Протеин на прах','P','г',7],['Пилешки/пуешки гърди','P','г',28],['Пилешка шунка','P','г',42],
+  ['Пуешка шунка','P','г',35],['Заешко','P','г',28],['Риба (повечето видове)','P','г',40],
+  ['Риба тон консерва / скариди / пушена сьомга','P','г',28],['Калмари, миди, омари','P','г',42],
+  ['Сьомга, скумрия, акула','P','г',42],['Ципура','P','г',28],['Лаврак','P','г',56],
+  ['Извара (нискомаслена)','P','г',56],['Скир','P','г',65],['Котидж (зърнесто сирене)','P','г',56],
+  ['Сирене (обезмаслено)','P','г',42],['Домашно изцедено мляко','P','г',60],['Цедено мляко (купешко, нискомасл.)','P','г',100],
+  ['Белтъци от яйце','P','бр',2],['Белтъци от пъдпъдъчи яйца','P','бр',7],['Соево мляко (неподсладено)','P','г',200],
+  ['Твърдо тофу','P','г',70],['Меко тофу','P','г',85],['Соево брашно','P','г',14],
+  ['Свинско чисто месо','P','г',35],['Агнешко чисто месо','P','г',35],['Телешко крехко','P','г',28],
+  ['Телешка кайма','P','г',42],['Пилешко/пуешко тъмно месо','P','г',28],['Патешко месо','P','г',35],
+  ['Шунка свинска','P','г',42],['Пастърма','P','г',28],['Моцарела','P','г',28],['Моцарела лайт','P','г',35],
+  ['Нискомаслено сирене','P','г',42],['Сирене Маджаров лайт','P','г',35],['Сирене „Рикота"','P','г',56],
+  ['Мазни меса (агн./тел./свин., мазна кайма)','P','г',28],['Салами','P','г',28],['Кренвирши (12 см)','P','г',56],
+  ['Черен дроб','P','г',28],['Пилешки дробчета','P','г',28],['Кашкавал','P','г',28],['Сирене над 15% масленост','P','г',28],
+  // ---- ВЪГЛЕХИДРАТИ (зеленчуци) ----
+  ['Броколи','C','г',230],['Гъби','C','г',360],['Домати','C','г',330],['Китайско зеле','C','г',250],
+  ['Зеле прясно (сурово)','C','г',300],['Зеле кисело (неготвено)','C','г',450],['Карфиол','C','г',270],
+  ['Краставица','C','г',600],['Краставички кисели','C','г',150],['Леща (сурова)','C','г',15],['Леща (сварена)','C','г',40],
+  ['Моркови','C','г',130],['Ряпа','C','г',200],['Лук стар','C','г',120],['Лук пресен','C','г',140],
+  ['Нахут (сварен)','C','г',40],['Патладжан','C','г',380],['Чушки сурови','C','г',270],['Чушки печени','C','г',140],
+  ['Праз','C','г',100],['Репички','C','г',400],['Тиквички сурови','C','г',360],['Тиквички печени','C','г',180],
+  ['Фасул (жълт, зелен)','C','г',180],['Целина (глава)','C','г',130],['Боб зрял (суров)','C','г',25],['Боб зрял (сварен)','C','г',50],
+  ['Грах замразен','C','г',100],['Картоф (суров)','C','г',60],['Картоф (сварен/печен)','C','г',45],['Доматено пюре','C','г',100],
+  ['Тиква (сурова)','C','г',140],['Тиква (сварена)','C','г',100],['Царевица (сварена)','C','г',40],['Червено цвекло','C','г',130],
+  // ---- ВЪГЛЕХИДРАТИ (плодове) ----
+  ['Плод (общо, повечето)','C','г',100],['Боровинки сини','C','г',80],['Грозде','C','г',80],['Грейпфрут','C','г',140],
+  ['Киви','C','г',60],['Круша','C','г',75],['Кайсии','C','бр',3],['Ябълка','C','г',100],['Портокал','C','г',100],['Помело','C','г',100],
+  ['Череши','C','бр',8],['Ягоди','C','г',140],['Малини','C','г',130],['Нар','C','г',60],['Вишни','C','бр',10],
+  ['Дюля','C','г',70],['Къпини','C','г',130],['Мандарини','C','г',75],['Сини сливи','C','г',90],['Райска ябълка','C','г',70],
+  ['Ананас','C','г',75],['Банан','C','г',40],['Диня','C','г',120],['Манго','C','г',60],['Пъпеш','C','г',100],
+  ['Смокиня (голяма)','C','бр',1],['Сок/фреш','C','мл',65],['Сушени плодове (дребни)','C','г',12],
+  ['Сушени сини сливи','C','г',16],['Сушени фурми','C','г',12],
+  // ---- ВЪГЛЕХИДРАТИ (зърнени) ----
+  ['Ечемик (суров)','C','г',12],['Овес (суров)','C','г',14],['Овес (сварен)','C','г',42],['Овесени ядки','C','г',14],
+  ['Овесени трици (сурови)','C','г',19],['Елда','C','г',14],['Киноа','C','г',14],['Просо','C','г',14],
+  ['Ориз бял (сварен)','C','г',12],['Ориз пълнозърнест (сварен)','C','г',35],['Брашно (бяло/пълнозърн.)','C','г',14],
+  ['Какао','C','г',10],['Спагети/макарони (сурови)','C','г',14],['Хляб бял/мек/пълнозърн.','C','фил',0.5],['Хляб Тонус/Бонус/Вита','C','фил',1],
+  ['Бира светло','C','мл',260],['Бира тъмно','C','мл',220],['Вино','C','мл',90],['Твърд алкохол','C','мл',30],
+  // ---- ВЪГЛЕХИДРАТИ (сладки) ----
+  ['Захар (кафява/бяла)','C','г',8],['Мед','C','г',12],['Агаве','C','г',12],['Кленов сироп','C','г',12],
+  ['Меласа','C','г',12],['Петмез','C','г',12],['Сладко (със захар)','C','г',12],['Сладко (без захар)','C','г',25],
+  // ---- МАЗНИНИ ----
+  ['Авокадо','F','г',10],['Зехтин','F','г',1.5],['Маслини','F','г',11],['Чиа','F','г',3],['Сусам','F','г',3],
+  ['Ленено семе','F','г',3],['Конопено семе','F','г',3],['Кокосови стърготини/брашно','F','г',3],['Фъстъчено масло','F','г',3],
+  ['Тахани','F','г',3],['Лешниково масло','F','г',3],['Сусамово масло','F','г',3],['Слънчогледово масло (паста)','F','г',3],
+  ['Фъстъчено масло (паста)','F','г',3],['Орехово масло','F','г',3],['Бадемова паста','F','г',3],
+  ['Ядки (бадеми/лешници/шамфъстък)','F','бр',3],['Фъстъци','F','бр',6],['Кашу','F','бр',2],
+  ['Майонеза лека','F','г',5],['Майонеза обикновена','F','г',1.7],['Олио (сусам./соев./рапич.)','F','г',1.5],
+  ['Какаови зърна','F','г',3],['Орехи (цял, 4 ядки)','F','бр',1],['Кайсиеви ядки','F','г',3],['Слънчогледови/тиквени семки','F','г',3],
+  ['Кокосово масло','F','г',1.5],['Краве масло','F','г',1.5],['Сметана заквасена','F','г',2.5],['Сметана заквасена лайт','F','г',5],
+  ['ГХИ (пречистено масло)','F','г',1.5],['Свинска мас','F','г',1.5],['Олио слънчогледово','F','г',1.5],
+  ['Сирене крема/лайт','F','г',10],['Топено сирене','F','г',30],['Течна сметана','F','г',30],
+  ['Яйце цяло','F','бр',1],['Пъдпъдъчи яйца','F','бр',6],
+  // ---- СМЕСЕНИ (П + В на посочения грамаж) ----
+  ['Кисело мляко 2%','M','г',200,200],['Прясно мляко 1.5–3%','M','г',200,200],['Кефир 1%','M','г',250,250],
+];
+const FOOD_MAP={}; FOODS.forEach(f=>FOOD_MAP[f[0]]=f);
+
+function blocksFor(food, qty){
+  const q=num(qty)||0;
+  if(food[1]==='P') return {p:q/food[3], c:0, f:0};
+  if(food[1]==='C') return {p:0, c:q/food[3], f:0};
+  if(food[1]==='F') return {p:0, c:0, f:q/food[3]};
+  if(food[1]==='M') return {p:q/food[3], c:q/food[4], f:0};
+  return {p:0,c:0,f:0};
+}
+function entryMacros(pB,cB,fB){ const p=pB*7, c=cB*9, f=(pB+fB)*1.5; return {p,c,f,kcal:p*4+c*4+f*9}; }
+function r1(x){ return Math.round(x*10)/10; }
+
+/* ============================================================
+   RENDER: FOOD (Zone)
+   ============================================================ */
+let foodListReady=false;
+function renderFood(){
+  if(!foodListReady){
+    document.getElementById('foodOptions').innerHTML=FOODS.map(f=>`<option value="${f[0]}"></option>`).join('');
+    foodListReady=true;
+  }
+  const today=todayISO();
+  const items=state.food.filter(e=>e.date===today);
+  // totals
+  let sP=0,sC=0,sF=0;
+  items.forEach(e=>{ sP+=e.pB; sC+=e.cB; sF+=e.fB; });
+  const m=entryMacros(sP,sC,sF);
+  const tot=document.getElementById('foodTotals');
+  const pPct=m.kcal?Math.round(m.p*4/m.kcal*100):0, cPct=m.kcal?Math.round(m.c*4/m.kcal*100):0, fPct=m.kcal?Math.round(m.f*9/m.kcal*100):0;
+  const blocks=[sP,sC,sF]; const mx=Math.max(...blocks), mn=Math.min(...blocks);
+  let bal;
+  if(items.length===0) bal='Още няма въведена храна днес.';
+  else if(mx-mn<=1) bal='✅ Балансирано — близо до 40/30/30.';
+  else { const names=['протеин','въглехидрати','мазнини']; const hi=names[blocks.indexOf(mx)], lo=names[blocks.indexOf(mn)]; bal=`⚠️ Дисбаланс — повече ${hi}, по-малко ${lo}. Целѝ равни блокове.`; }
+  tot.innerHTML=`
+    <div class="ztotals">
+      <div class="zblocks">
+        <div class="zb"><span class="zbk">Протеин</span><span class="zbn num">${r1(sP)}</span><span class="zbu">блока · ${Math.round(m.p)}г</span></div>
+        <div class="zb"><span class="zbk">Въглехидр.</span><span class="zbn num">${r1(sC)}</span><span class="zbu">блока · ${Math.round(m.c)}г</span></div>
+        <div class="zb"><span class="zbk">Мазнини</span><span class="zbn num">${r1(sF)}</span><span class="zbu">блока · ${Math.round(m.f)}г</span></div>
+      </div>
+      <div class="zcal"><span>Общо днес</span><b class="num">${Math.round(m.kcal)} kcal</b></div>
+      <div class="zpct"><span>Дял калории:</span> П ${pPct}% · В ${cPct}% · М ${fPct}% <span class="ztarget">(цел 30/40/30)</span></div>
+      <div class="zbal">${bal}</div>
+    </div>`;
+  // log
+  const log=document.getElementById('foodLog');
+  if(!items.length){ log.innerHTML='<div class="empty" style="padding:20px">Добави първата храна за деня горе.</div>'; }
+  else {
+    log.innerHTML=[...items].reverse().map(e=>{
+      const qtyTxt=e.qty!=null?`${e.qty} ${e.unit}`:'ръчно';
+      const bl=[e.pB?`П ${r1(e.pB)}`:'',e.cB?`В ${r1(e.cB)}`:'',e.fB?`М ${r1(e.fB)}`:''].filter(Boolean).join(' · ');
+      return `<div class="flog"><div class="fl-main"><div class="fl-name">${e.name}</div><div class="fl-sub">${qtyTxt} — ${bl} — ${Math.round(e.kcal)} kcal</div></div><button class="li-x" data-fdel="${e.id}">×</button></div>`;
+    }).join('');
+    log.querySelectorAll('[data-fdel]').forEach(b=>b.onclick=()=>{ state.food=state.food.filter(x=>x.id!=b.dataset.fdel); DB.set(K.food,state.food); renderFood(); });
+  }
+}
+function foodPickChanged(){
+  const name=document.getElementById('foodPick').value.trim();
+  const f=FOOD_MAP[name]; const unitEl=document.getElementById('foodUnit'); const hint=document.getElementById('foodHint');
+  if(f){ unitEl.textContent=f[2]; if(f[1]==='M') hint.textContent=`Смесена: ~1 П + 1 В блок на ${f[3]} ${f[2]}`; else { const t={P:'протеинов',C:'въглехидратен',F:'мазнинен'}[f[1]]; hint.textContent=`1 ${t} блок = ${f[3]} ${f[2]}`; } }
+  else { unitEl.textContent='г'; hint.textContent=''; }
+}
+function addFood(){
+  const name=document.getElementById('foodPick').value.trim();
+  const f=FOOD_MAP[name];
+  const qty=document.getElementById('foodQty').value;
+  if(!f){ toast('Избери храна от списъка'); return; }
+  if(!(num(qty)>0)){ toast('Въведи количество'); return; }
+  const b=blocksFor(f,qty); const mac=entryMacros(b.p,b.c,b.f);
+  state.food.push({ id:Date.now(), date:todayISO(), name:f[0], qty:num(qty), unit:f[2], cat:f[1], pB:b.p, cB:b.c, fB:b.f, kcal:mac.kcal });
+  DB.set(K.food,state.food);
+  document.getElementById('foodPick').value=''; document.getElementById('foodQty').value=''; foodPickChanged();
+  renderFood(); toast('Добавено');
+}
+function addManual(){
+  const name=document.getElementById('mName').value.trim()||'Ръчна храна';
+  const p=num(document.getElementById('mP').value)||0, c=num(document.getElementById('mC').value)||0, fb=num(document.getElementById('mF').value)||0;
+  if(p<=0&&c<=0&&fb<=0){ toast('Въведи поне един блок'); return; }
+  const mac=entryMacros(p,c,fb);
+  state.food.push({ id:Date.now(), date:todayISO(), name, qty:null, unit:'ръчно', cat:'X', pB:p, cB:c, fB:fb, kcal:mac.kcal });
+  DB.set(K.food,state.food);
+  ['mName','mP','mC','mF'].forEach(id=>document.getElementById(id).value='');
+  renderFood(); toast('Добавено ръчно');
+}
+
+/* ============================================================
+   RENDER: BALANCE
+   ============================================================ */
+function getProfile(){ return { sex:state.profile.sex||'m', age:num(state.profile.age)||50, height:num(state.profile.height)||178 }; }
+function renderBalance(){
+  const p=getProfile();
+  document.getElementById('pfSex').value=p.sex;
+  document.getElementById('pfAge').value=state.profile.age||50;
+  document.getElementById('pfHeight').value=state.profile.height||178;
+  const kg=latestWeight();
+  const card=document.getElementById('balanceCard');
+  if(!kg){ card.innerHTML='<div class="empty" style="padding:26px">За баланса ми трябва тегло. Запиши го в таб „Тегло".</div>'; return; }
+  const bmr=10*kg + 6.25*p.height - 5*p.age + (p.sex==='m'?5:-161);
+  const base=Math.round(bmr*1.2);
+  const today=todayISO();
+  const exercise=state.workouts.filter(w=>w.date===today&&w.burned).reduce((s,w)=>s+(w.burned.total||0),0);
+  const burned=base+exercise;
+  const consumed=Math.round(state.food.filter(e=>e.date===today).reduce((s,e)=>s+e.kcal,0));
+  const bal=consumed-burned;
+  const suggest=burned+300;
+  const balCls=bal>50?'pos':bal<-50?'neg':'flat';
+  const balTxt=bal>0?`+${bal}`:''+bal;
+  card.innerHTML=`
+    <div class="bal-main ${balCls}">
+      <div class="bal-k">Баланс днес</div>
+      <div class="bal-v num">${balTxt} <small>kcal</small></div>
+      <div class="bal-note">${bal>0?'излишък (растеж)':bal<0?'дефицит':'на баланс'}</div>
+    </div>
+    <div class="bal-grid">
+      <div class="bstat"><span class="bk">Приети (храна)</span><span class="bv num">${consumed}</span></div>
+      <div class="bstat"><span class="bk">Изгорени общо</span><span class="bv num">${burned}</span></div>
+      <div class="bstat"><span class="bk">Базов разход</span><span class="bv num">${base}</span><span class="bd">BMR × 1.2</span></div>
+      <div class="bstat"><span class="bk">Тренировка днес</span><span class="bv num">${exercise}</span><span class="bd">от таб „Днес"</span></div>
+    </div>
+    <div class="bal-tip">🎯 За лек излишък (твоята цел) целѝ прием ≈ <b class="num">${suggest} kcal</b> днес (изгорени + ~300).</div>
+    <div class="bal-fine">При ${kg} кг · ${p.age} г · ${p.height} см. Числата са ориентировъчни оценки, не точни измервания.</div>`;
+}
+function saveProfile(){
+  state.profile={ sex:document.getElementById('pfSex').value, age:num(document.getElementById('pfAge').value)||50, height:num(document.getElementById('pfHeight').value)||178 };
+  DB.set(K.profile,state.profile);
+  renderBalance(); toast('Профилът е запазен');
+}
+
+/* ============================================================
    NAV + UTIL
    ============================================================ */
 function emptyState(t,s){ return `<div class="empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#5f6f86" stroke-width="1.5"><path d="M6 3v4M6 21v-8M18 3v8M18 21v-4M6 13a3 3 0 0 0 0-6M18 11a3 3 0 0 0 0 6"/></svg><div style="font-weight:600;color:var(--muted);margin-bottom:4px">${t}</div><div style="font-size:13px">${s}</div></div>`; }
@@ -866,8 +1225,18 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
   document.getElementById('view-'+tab).classList.add('active');
   if(tab==='history') renderHistory();
   if(tab==='weight') renderWeight();
+  if(tab==='food') renderFood();
+  if(tab==='balance') renderBalance();
   window.scrollTo(0,0);
 });
+
+/* wire food + profile controls (static elements) */
+document.getElementById('foodPick').addEventListener('input',foodPickChanged);
+document.getElementById('foodAdd').onclick=addFood;
+document.getElementById('foodQty').addEventListener('keydown',e=>{ if(e.key==='Enter') addFood(); });
+document.getElementById('manualToggle').onclick=()=>{ const b=document.getElementById('manualBox'); b.style.display=b.style.display==='none'?'block':'none'; };
+document.getElementById('manualAdd').onclick=addManual;
+document.getElementById('pfSave').onclick=saveProfile;
 
 /* ============================================================
    INIT
@@ -877,6 +1246,8 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
   state.weights  = (await DB.get(K.weights))  || [];
   state.measure  = (await DB.get(K.measure))  || [];
   state.draft    = (await DB.get(K.draft))    || {};
+  state.food     = (await DB.get(K.food))     || [];
+  state.profile  = (await DB.get(K.profile))  || { sex:'m', age:50, height:178 };
   renderDaySelector();
   renderWorkout();
   renderProgram();
