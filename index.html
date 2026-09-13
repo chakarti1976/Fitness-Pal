@@ -9,6 +9,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Фитнес дневник">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -335,6 +338,41 @@
   .lib-add-btn.added{background:transparent;border:1px solid var(--line-2);color:var(--muted-2);cursor:default}
   .ex-rm{background:none;border:none;color:var(--muted-2);font-size:20px;cursor:pointer;padding:2px 4px;line-height:1;flex:0 0 auto}
   .ex-rm:hover{color:var(--danger)}
+
+  /* ---- water tracker ---- */
+  .water-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow-card)}
+  .water-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .water-amt{font-family:'Space Mono';font-size:22px;font-weight:700}
+  .water-amt small{font-size:13px;color:var(--muted);font-weight:400}
+  .water-bar-track{background:var(--ink-2);border-radius:10px;height:10px;overflow:hidden;margin-bottom:12px}
+  .water-bar-fill{height:100%;background:linear-gradient(90deg,#2fb8e0,#37E0B0);border-radius:10px;transition:width .3s var(--ease)}
+  .water-btns{display:flex;gap:8px;flex-wrap:wrap}
+  .water-btns button{flex:1;min-width:64px;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:10px 6px;font-size:13px;font-weight:700;color:var(--text);cursor:pointer}
+  .water-custom{display:flex;gap:8px;margin-top:8px}
+  .water-custom input{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:10px;font-family:'Space Mono';text-align:center}
+  .water-custom button{background:var(--accent);color:#12151c;border:none;border-radius:11px;padding:0 16px;font-weight:700;cursor:pointer}
+  .water-log{margin-top:10px;font-size:11px;color:var(--muted-2)}
+
+  /* ---- supplement checklist ---- */
+  .supp-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .supp-chip{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px;cursor:pointer;box-shadow:var(--shadow-card)}
+  .supp-chip .sc-ico{font-size:18px}
+  .supp-chip .sc-name{font-size:12.5px;font-weight:600;flex:1}
+  .supp-chip.on{border-color:var(--record)}
+  .supp-chip .sc-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--line-2);flex:0 0 auto}
+  .supp-chip.on .sc-check{background:var(--record);border-color:var(--record)}
+
+  /* ---- vegetable nudge + alcohol note ---- */
+  .veg-nudge{margin-top:10px;font-size:12px;padding:9px 11px;border-radius:10px}
+  .veg-nudge.ok{background:var(--record-dim);color:var(--record);border:1px solid rgba(55,224,176,.25)}
+  .veg-nudge.low{background:var(--accent-dim);color:var(--accent);border:1px solid rgba(255,197,61,.25)}
+  .alc-badge{font-size:10px;background:var(--accent-dim);color:var(--accent);border-radius:6px;padding:1px 5px;margin-left:5px;white-space:nowrap;font-weight:700}
+  .alc-note{margin-top:10px;font-size:12px;padding:9px 11px;border-radius:10px;background:#3a2320;color:#ffb199;border:1px solid rgba(255,107,87,.25)}
+
+  /* ---- per-exercise progress chart ---- */
+  .exprog-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow-card)}
+  .exprog-card select{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:11px;font-size:14px;color:var(--text);margin-bottom:10px}
+  .exprog-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:6px}
 </style>
 </head>
 <body>
@@ -398,7 +436,7 @@
       <button class="subtab" data-sub="food">Храна</button>
       <button class="subtab" data-sub="balance">Баланс</button>
     </div>
-    <div id="sub-workouts" class="subpane active"><div id="historyList"></div></div>
+    <div id="sub-workouts" class="subpane active"><div id="exProgWrap"></div><div id="historyList"></div></div>
     <div id="sub-food" class="subpane"><div id="foodHistory"></div></div>
     <div id="sub-balance" class="subpane"><div id="balanceHistory"></div></div>
   </section>
@@ -466,6 +504,13 @@
     </div>
 
     <div id="foodTotals"></div>
+
+    <div class="eyebrow" style="margin-top:20px">Вода</div>
+    <div id="waterCard"></div>
+
+    <div class="eyebrow" style="margin-top:20px">Добавки днес</div>
+    <div id="suppCard"></div>
+
     <div class="eyebrow" style="margin-top:20px">Днешен дневник</div>
     <div id="foodLog"></div>
   </section>
@@ -548,7 +593,7 @@ const DB = {
     try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ /* storage full or blocked */ }
   }
 };
-const K = { workouts:'elx_workouts', weights:'elx_weights', measure:'elx_measure', draft:'elx_draft', food:'elx_food', profile:'elx_profile', notes:'elx_daynotes' };
+const K = { workouts:'elx_workouts', weights:'elx_weights', measure:'elx_measure', draft:'elx_draft', food:'elx_food', profile:'elx_profile', notes:'elx_daynotes', water:'elx_water', supplements:'elx_supplements' };
 
 /* ============================================================
    PROGRAM DATA
@@ -762,7 +807,7 @@ function art(p){ const f=EX_ART[p]||EX_ART._default; return `<svg viewBox="0 0 1
 /* ============================================================
    STATE
    ============================================================ */
-let state = { workouts:[], weights:[], measure:[], draft:{}, food:[], profile:{}, notes:{} };
+let state = { workouts:[], weights:[], measure:[], draft:{}, food:[], profile:{}, notes:{}, water:[], supplements:{} };
 let currentDay = 'puA';
 
 function vidUrl(en){ return 'https://www.youtube.com/results?search_query='+encodeURIComponent(en+' proper form technique'); }
@@ -1023,7 +1068,67 @@ function renderProgram(){
    RENDER: HISTORY
    ============================================================ */
 function sessionVolume(w){ let v=0; w.exercises.forEach(ex=>ex.sets.forEach(s=>{ v+=(num(s.reps)||0)*(num(s.kg)||0); })); return Math.round(v); }
+
+/* ---- per-exercise progress chart ---- */
+let exProgId=null;
+function loggedExerciseList(){
+  const map=new Map();
+  state.workouts.forEach(w=>w.exercises.forEach(ex=>{ if(!map.has(ex.id)) map.set(ex.id,ex.name); }));
+  return [...map.entries()].map(([id,name])=>({id,name})).sort((a,b)=>a.name.localeCompare(b.name,'bg'));
+}
+function renderExerciseProgress(){
+  const wrap=document.getElementById('exProgWrap'); if(!wrap) return;
+  const list=loggedExerciseList();
+  if(!list.length){ wrap.innerHTML=''; return; }
+  if(!exProgId || !list.some(e=>e.id===exProgId)) exProgId=list[0].id;
+  wrap.innerHTML=`<div class="exprog-card">
+    <div class="eyebrow">Прогрес по упражнение</div>
+    <select id="exProgPick">${list.map(e=>`<option value="${e.id}" ${e.id===exProgId?'selected':''}>${e.name}</option>`).join('')}</select>
+    <svg class="chart" id="exProgChart" viewBox="0 0 600 150" preserveAspectRatio="none"></svg>
+    <div class="exprog-meta" id="exProgMeta"></div>
+  </div>`;
+  document.getElementById('exProgPick').onchange=ev=>{ exProgId=ev.target.value; renderExerciseProgress(); };
+  drawExerciseChart(exProgId);
+}
+function drawExerciseChart(id){
+  const sorted=[...state.workouts].filter(w=>w.exercises.some(e=>e.id===id)).sort((a,b)=>a.id-b.id);
+  const points=sorted.map(w=>{
+    const ex=w.exercises.find(e=>e.id===id);
+    const sets=ex.sets.filter(s=>num(s.reps)>0);
+    const maxKg=sets.length?Math.max(...sets.map(s=>num(s.kg)||0)):0;
+    return {date:w.date, maxKg};
+  });
+  const svg=document.getElementById('exProgChart');
+  const meta=document.getElementById('exProgMeta');
+  if(points.length<2){
+    svg.innerHTML=`<text x="300" y="78" fill="#5f6f86" font-size="13" text-anchor="middle" font-family="Inter">Нужни са поне 2 тренировки с това упражнение</text>`;
+    meta.innerHTML=points.length===1?`Засега: <b class="num" style="color:var(--text)">${points[0].maxKg} кг</b>`:'';
+    return;
+  }
+  const kgs=points.map(p=>p.maxKg);
+  let min=Math.min(...kgs), max=Math.max(...kgs);
+  if(max-min<1){ min-=0.5; max+=0.5; }
+  const pad=(max-min)*0.15; min-=pad; max+=pad;
+  const W=600,H=150,L=8,R=8,T=14,B=18;
+  const x=i=>L+(i/(points.length-1))*(W-L-R);
+  const y=v=>T+(1-(v-min)/(max-min))*(H-T-B);
+  const pts=points.map((p,i)=>[x(i),y(p.maxKg)]);
+  const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area=`M${pts[0][0]} ${H-B} `+pts.map(p=>'L'+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ')+` L${pts[pts.length-1][0]} ${H-B} Z`;
+  const dots=pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.5" fill="#37E0B0"/>`).join('');
+  svg.innerHTML=`
+    <defs><linearGradient id="gExProg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#37E0B0" stop-opacity="0.22"/><stop offset="1" stop-color="#37E0B0" stop-opacity="0"/></linearGradient></defs>
+    <path d="${area}" fill="url(#gExProg)"/>
+    <path d="${line}" fill="none" stroke="#37E0B0" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${dots}
+    <text x="${L}" y="10" fill="#5f6f86" font-size="11" font-family="Space Mono">${max.toFixed(1)}кг</text>
+    <text x="${L}" y="${H-4}" fill="#5f6f86" font-size="11" font-family="Space Mono">${min.toFixed(1)}кг</text>`;
+  const last=points[points.length-1], best=points.reduce((a,b)=>b.maxKg>a.maxKg?b:a);
+  meta.innerHTML=`<span>Последно ${fmtDate(last.date)}: <b class="num" style="color:var(--text)">${last.maxKg} кг</b></span><span>Най-добро: <b class="num" style="color:var(--record)">${best.maxKg} кг</b></span>`;
+}
+
 function renderHistory(){
+  renderExerciseProgress();
   const el=document.getElementById('historyList');
   if(!state.workouts.length){ el.innerHTML=emptyState('Няма записани тренировки още','Отиди в „Днес“, избери ден и запиши първата.'); return; }
   const sorted=[...state.workouts].sort((a,b)=>b.id-a.id);
@@ -1152,8 +1257,9 @@ document.getElementById('measureSave').onclick=()=>{
    DATA BACKUP (export / import JSON)
    ============================================================ */
 function exportData(){
-  const dump={ app:'tihomir-fitnes-dnevnik', version:1, exported:new Date().toISOString(),
-    workouts:state.workouts, weights:state.weights, measure:state.measure };
+  const dump={ app:'tihomir-fitnes-dnevnik', version:2, exported:new Date().toISOString(),
+    workouts:state.workouts, weights:state.weights, measure:state.measure,
+    food:state.food, profile:state.profile, notes:state.notes, water:state.water, supplements:state.supplements };
   const blob=new Blob([JSON.stringify(dump,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
@@ -1170,7 +1276,14 @@ function importData(file){
       if(Array.isArray(d.workouts)) state.workouts=d.workouts;
       if(Array.isArray(d.weights)) state.weights=d.weights;
       if(Array.isArray(d.measure)) state.measure=d.measure;
+      if(Array.isArray(d.food)) state.food=d.food;
+      if(d.profile && typeof d.profile==='object') state.profile=d.profile;
+      if(d.notes && typeof d.notes==='object') state.notes=d.notes;
+      if(Array.isArray(d.water)) state.water=d.water;
+      if(d.supplements && typeof d.supplements==='object') state.supplements=d.supplements;
       DB.set(K.workouts,state.workouts); DB.set(K.weights,state.weights); DB.set(K.measure,state.measure);
+      DB.set(K.food,state.food); DB.set(K.profile,state.profile); DB.set(K.notes,state.notes);
+      DB.set(K.water,state.water); DB.set(K.supplements,state.supplements);
       renderWorkout(); renderHistory(); renderWeight();
       toast('Архивът е зареден ✓');
     }catch(e){ toast('Невалиден файл'); }
@@ -1282,6 +1395,12 @@ const FOODS=[
   ['Айран (натурален)','M','г',350,300],['Гръцко кисело мляко 2%','M','г',78,225],
 ];
 const FOOD_MAP={}; FOODS.forEach(f=>FOOD_MAP[f[0]]=f);
+/* "generous" low-density Zone vegetables — used only for the veggie-minimum nudge (excludes starchy carbs like potato/corn/beans/lentils/beetroot) */
+const VEGETABLE_SET=new Set(['Броколи','Гъби','Домати','Китайско зеле','Зеле прясно (сурово)','Зеле кисело (неготвено)','Карфиол',
+  'Краставица','Краставички кисели','Моркови','Ряпа','Лук стар','Лук пресен','Патладжан','Чушки сурови','Чушки печени',
+  'Праз','Репички','Тиквички сурови','Тиквички печени','Фасул (жълт, зелен)','Целина (глава)','Доматено пюре',
+  'Спанак (пресен)','Рукола','Аспержи (сварени)','Брюкселско зеле (сварено)','Маруля','Целина на стръкове']);
+const ALCOHOL_SET=new Set(['Бира светло','Бира тъмно','Вино','Твърд алкохол']);
 
 function blocksFor(food, qty){
   const q=num(qty)||0;
@@ -1315,8 +1434,8 @@ function renderFood(){
   const today=todayISO();
   const items=state.food.filter(e=>e.date===today);
   // totals
-  let sP=0,sC=0,sF=0;
-  items.forEach(e=>{ sP+=e.pB; sC+=e.cB; sF+=e.fB; });
+  let sP=0,sC=0,sF=0,sVeg=0,hasAlcohol=false;
+  items.forEach(e=>{ sP+=e.pB; sC+=e.cB; sF+=e.fB; if(e.veg) sVeg+=e.cB; if(e.alcohol) hasAlcohol=true; });
   const m=entryMacros(sP,sC,sF);
   const tot=document.getElementById('foodTotals');
   const pPct=m.kcal?Math.round(m.p*4/m.kcal*100):0, cPct=m.kcal?Math.round(m.c*4/m.kcal*100):0, fPct=m.kcal?Math.round(m.f*9/m.kcal*100):0;
@@ -1325,6 +1444,11 @@ function renderFood(){
   if(items.length===0) bal='Още няма въведена храна днес.';
   else if(mx-mn<=1) bal='✅ Балансирано — близо до 40/30/30.';
   else { const names=['протеин','въглехидрати','мазнини']; const hi=names[blocks.indexOf(mx)], lo=names[blocks.indexOf(mn)]; bal=`⚠️ Дисбаланс — повече ${hi}, по-малко ${lo}. Целѝ равни блокове.`; }
+  const VEG_TARGET=3;
+  const vegNudge = items.length===0 ? '' :
+    sVeg>=VEG_TARGET ? `<div class="veg-nudge ok">🥦 Зеленчуци: ${r1(sVeg)}/${VEG_TARGET} блока — добра генерозна порция днес.</div>`
+    : `<div class="veg-nudge low">🥦 Зеленчуци: ${r1(sVeg)}/${VEG_TARGET} блока — добави още една генерозна порция (броколи, чушки, тиквички, спанак…).</div>`;
+  const alcNote = hasAlcohol ? `<div class="alc-note">🥃 Отбелязан алкохол днес — дръж го умерено (1 порция), особено с цел покачване на мускулна маса и по-добро възстановяване.</div>` : '';
   tot.innerHTML=`
     <div class="ztotals">
       <div class="zblocks">
@@ -1335,6 +1459,7 @@ function renderFood(){
       <div class="zcal"><span>Общо днес</span><b class="num">${Math.round(m.kcal)} kcal</b></div>
       <div class="zpct"><span>Дял калории:</span> П ${pPct}% · В ${cPct}% · М ${fPct}% <span class="ztarget">(цел 30/40/30)</span></div>
       <div class="zbal">${bal}</div>
+      ${vegNudge}${alcNote}
     </div>`;
   // log grouped by meal
   const log=document.getElementById('foodLog');
@@ -1349,13 +1474,15 @@ function renderFood(){
       out+=mi.map(e=>{
         const qtyTxt=e.qty!=null?`${e.qty} ${e.unit}`:'ръчно';
         const bl=[e.pB?`П ${r1(e.pB)}`:'',e.cB?`В ${r1(e.cB)}`:'',e.fB?`М ${r1(e.fB)}`:''].filter(Boolean).join(' · ');
-        return `<div class="flog"><div class="fl-main"><div class="fl-name">${e.name}</div><div class="fl-sub">${qtyTxt} — ${bl} — ${Math.round(e.kcal)} kcal</div></div><button class="li-x" data-fdel="${e.id}">×</button></div>`;
+        return `<div class="flog"><div class="fl-main"><div class="fl-name">${e.name}${e.alcohol?'<span class="alc-badge">🥃 алкохол</span>':''}</div><div class="fl-sub">${qtyTxt} — ${bl} — ${Math.round(e.kcal)} kcal</div></div><button class="li-x" data-fdel="${e.id}">×</button></div>`;
       }).join('');
       out+='</div>';
     });
     log.innerHTML=out;
     log.querySelectorAll('[data-fdel]').forEach(b=>b.onclick=()=>{ state.food=state.food.filter(x=>x.id!=b.dataset.fdel); DB.set(K.food,state.food); renderFood(); });
   }
+  renderWater();
+  renderSupplements();
 }
 function foodPickChanged(){
   const name=document.getElementById('foodPick').value.trim();
@@ -1370,7 +1497,7 @@ function addFood(){
   if(!f){ toast('Избери храна от списъка'); return; }
   if(!(num(qty)>0)){ toast('Въведи количество'); return; }
   const b=blocksFor(f,qty); const mac=entryMacros(b.p,b.c,b.f);
-  state.food.push({ id:Date.now(), date:todayISO(), meal:currentMeal, name:f[0], qty:num(qty), unit:f[2], cat:f[1], pB:b.p, cB:b.c, fB:b.f, kcal:mac.kcal });
+  state.food.push({ id:Date.now(), date:todayISO(), meal:currentMeal, name:f[0], qty:num(qty), unit:f[2], cat:f[1], pB:b.p, cB:b.c, fB:b.f, kcal:mac.kcal, veg:VEGETABLE_SET.has(f[0]), alcohol:ALCOHOL_SET.has(f[0]) });
   DB.set(K.food,state.food);
   document.getElementById('foodPick').value=''; document.getElementById('foodQty').value=''; foodPickChanged();
   renderFood(); toast('Добавено');
@@ -1384,6 +1511,71 @@ function addManual(){
   DB.set(K.food,state.food);
   ['mName','mP','mC','mF'].forEach(id=>document.getElementById(id).value='');
   renderFood(); toast('Добавено ръчно');
+}
+
+/* ============================================================
+   WATER / HYDRATION
+   ============================================================ */
+function waterTarget(){ const kg=latestWeight()||80; return Math.round(kg*33/50)*50; } // ~33ml/kg, rounded to 50ml
+function addWater(ml){
+  if(!(ml>0)) return;
+  state.water.push({ id:Date.now(), date:todayISO(), ml });
+  DB.set(K.water,state.water);
+  renderWater();
+  toast(`+${ml} мл вода`);
+}
+function renderWater(){
+  const el=document.getElementById('waterCard'); if(!el) return;
+  const today=todayISO();
+  const items=state.water.filter(w=>w.date===today);
+  const total=items.reduce((s,w)=>s+w.ml,0);
+  const target=waterTarget();
+  const pct=Math.min(100,Math.round(total/target*100));
+  el.innerHTML=`
+    <div class="water-card">
+      <div class="water-top">
+        <div class="water-amt num">${total}<small> / ${target} мл</small></div>
+        <div style="font-size:11px;color:var(--muted)">${pct}%</div>
+      </div>
+      <div class="water-bar-track"><div class="water-bar-fill" style="width:${pct}%"></div></div>
+      <div class="water-btns">
+        <button data-water="250">+250мл</button>
+        <button data-water="330">+330мл</button>
+        <button data-water="500">+500мл</button>
+        <button data-water="750">+750мл</button>
+      </div>
+      <div class="water-custom">
+        <input id="waterCustom" type="text" inputmode="numeric" placeholder="друго количество (мл)">
+        <button id="waterCustomAdd">Добави</button>
+      </div>
+      ${items.length?`<div class="water-log">${items.length} записа днес</div>`:''}
+    </div>`;
+  el.querySelectorAll('[data-water]').forEach(b=>b.onclick=()=>addWater(parseInt(b.dataset.water)));
+  const customBtn=document.getElementById('waterCustomAdd');
+  const customInp=document.getElementById('waterCustom');
+  customBtn.onclick=()=>{ const v=Math.round(num(customInp.value)); if(v>0){ addWater(v); customInp.value=''; } else toast('Въведи валидно количество'); };
+  customInp.addEventListener('keydown',ev=>{ if(ev.key==='Enter') customBtn.click(); });
+}
+
+/* ============================================================
+   SUPPLEMENTS CHECKLIST
+   ============================================================ */
+const SUPPLEMENTS=[['vitD','☀️','Витамин D'],['omega3','🐟','Омега-3'],['magnesium','💊','Магнезий'],['creatine','⚡','Креатин']];
+function todaySupps(){ const t=todayISO(); if(!state.supplements[t]) state.supplements[t]={}; return state.supplements[t]; }
+function toggleSupp(key){
+  const s=todaySupps();
+  s[key]=!s[key];
+  DB.set(K.supplements,state.supplements);
+  renderSupplements();
+}
+function renderSupplements(){
+  const el=document.getElementById('suppCard'); if(!el) return;
+  const s=todaySupps();
+  el.innerHTML=`<div class="supp-grid">${SUPPLEMENTS.map(([key,icon,name])=>{
+    const on=!!s[key];
+    return `<div class="supp-chip ${on?'on':''}" data-supp="${key}"><span class="sc-ico">${icon}</span><span class="sc-name">${name}</span><span class="sc-check"></span></div>`;
+  }).join('')}</div>`;
+  el.querySelectorAll('[data-supp]').forEach(c=>c.onclick=()=>toggleSupp(c.dataset.supp));
 }
 
 /* ============================================================
@@ -1527,10 +1719,17 @@ document.getElementById('pfSave').onclick=saveProfile;
   state.food     = (await DB.get(K.food))     || [];
   state.profile  = (await DB.get(K.profile))  || { sex:'m', age:50, height:178, activity:1.2 };
   state.notes    = (await DB.get(K.notes))     || {};
+  state.water    = (await DB.get(K.water))     || [];
+  state.supplements = (await DB.get(K.supplements)) || {};
   renderDaySelector();
   renderWorkout();
   renderProgram();
 })();
+
+/* PWA: offline support + installability */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('service-worker.js').catch(()=>{}); });
+}
 </script>
 </body>
 </html>
