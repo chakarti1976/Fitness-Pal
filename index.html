@@ -579,7 +579,7 @@
   <section id="view-scan" class="tab-view">
     <div class="eyebrow">Изчисли от етикет</div>
     <h2 class="section-title">Скенер на етикет</h2>
-    <p class="sub">Снимай хранителната таблица на опаковката (протеини / въглехидрати / мазнини на 100 г или мл) — блоковете по Зоната се изчисляват автоматично.</p>
+    <p class="sub">Снимай хранителната таблица на опаковката (протеини / въглехидрати / мазнини на 100 г или мл) — блоковете по Зоната се изчисляват автоматично. Разпознаването разбира етикети на български, английски, фински и шведски (вкл. двуезични FI/SV).</p>
 
     <div class="scan-card">
       <input type="file" id="scanFile" accept="image/*" capture="environment" style="display:none">
@@ -1818,10 +1818,19 @@ function loadTesseract(){
   });
   return tesseractLoadPromise;
 }
+/* Nutrition-label keywords — Bulgarian, English, Finnish and Swedish
+   (Finnish packaging is legally bilingual FI/SV, so both are needed
+   together). Roots, not full words, so OCR typos and word endings
+   (proteiinia, hiilihydraatit, kolhydrater…) still match. */
+const MACRO_KEYWORDS={
+  P:['белтъч','протеин','proteiin','protein'],
+  C:['въглехидрат','hiilihydraat','kolhydrat','carbohydrate'],
+  F:['мазнин','rasva','fett','fat'],
+};
 function extractMacro(text,keywords){
   const t=text.replace(/,/g,'.');
   for(const kw of keywords){
-    const re=new RegExp(kw+'[^0-9]{0,18}([0-9]+(?:\\.[0-9]+)?)','i');
+    const re=new RegExp(kw+'[^0-9]{0,25}([0-9]+(?:\\.[0-9]+)?)','i');
     const m=t.match(re);
     if(m) return parseFloat(m[1]);
   }
@@ -2053,14 +2062,14 @@ document.getElementById('scanOcrBtn').onclick=async()=>{
   const status=document.getElementById('scanOcrStatus');
   const img=document.getElementById('scanPreview').src;
   if(!img) return;
-  status.textContent='⏳ Зарежда разпознаване…';
+  status.textContent='⏳ Зарежда разпознаване (BG/EN/FI/SV)…';
   try{
     await loadTesseract();
-    status.textContent='🔎 Разчита текста…';
-    const { data:{ text } } = await Tesseract.recognize(img,'eng+bul');
-    const p=extractMacro(text,['белтъчини','протеини','protein']);
-    const c=extractMacro(text,['въглехидрати','carbohydrate']);
-    const f=extractMacro(text,['мазнини','fat']);
+    status.textContent='🔎 Разчита текста… (първия път е по-бавно)';
+    const { data:{ text } } = await Tesseract.recognize(img,'eng+bul+fin+swe');
+    const p=extractMacro(text,MACRO_KEYWORDS.P);
+    const c=extractMacro(text,MACRO_KEYWORDS.C);
+    const f=extractMacro(text,MACRO_KEYWORDS.F);
     let found=0;
     if(p!=null){ document.getElementById('scanProtein').value=p; found++; }
     if(c!=null){ document.getElementById('scanCarbs').value=c; found++; }
