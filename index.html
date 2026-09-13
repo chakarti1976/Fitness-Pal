@@ -613,9 +613,19 @@
     </div>
 
     <div class="scan-card">
+      <div class="eyebrow">Име на храната</div>
+      <input id="scanName" type="text" placeholder="напр. Сирене фета">
+      <div class="db-unit-row">
+        <label>Мерна единица</label>
+        <select id="scanUnit"><option value="г">грам (г)</option><option value="мл">милилитър (мл)</option></select>
+      </div>
+      <button class="btn-ghost" id="scanSaveDb">💾 Запази в базата (за търсене после)</button>
+      <div class="scan-note">Записва се със стойностите на 100 г/мл от етикета — после го намираш в търсенето на храна и въвеждаш различни количества всеки път.</div>
+    </div>
+
+    <div class="scan-card">
       <div class="eyebrow">Добави в дневника</div>
-      <input id="scanName" type="text" placeholder="Име на храната (напр. Сирене фета)">
-      <div class="food-qty-row" style="margin-top:9px">
+      <div class="food-qty-row">
         <input id="scanQty" type="text" inputmode="decimal" placeholder="изядено количество" value="100">
         <span class="food-unit">г</span>
       </div>
@@ -1530,6 +1540,7 @@ function blocksFor(food, qty){
   if(food[1]==='C') return {p:0, c:q/food[3], f:0};
   if(food[1]==='F') return {p:0, c:0, f:q/food[3]};
   if(food[1]==='M') return {p:q/food[3], c:q/food[4], f:0};
+  if(food[1]==='X') return {p:q/food[3], c:q/food[4], f:q/food[5]}; // full P+C+F food (e.g. saved from the label scanner)
   return {p:0,c:0,f:0};
 }
 function entryMacros(pB,cB,fB){ const p=pB*7, c=cB*9, f=(pB+fB)*1.5; return {p,c,f,kcal:p*4+c*4+f*9}; }
@@ -1605,7 +1616,12 @@ function renderFood(){
 function foodPickChanged(){
   const name=document.getElementById('foodPick').value.trim();
   const f=FOOD_MAP[name]; const unitEl=document.getElementById('foodUnit'); const hint=document.getElementById('foodHint');
-  if(f){ unitEl.textContent=f[2]; if(f[1]==='M') hint.textContent=`Смесена: ~1 П + 1 В блок на ${f[3]} ${f[2]}`; else { const t={P:'протеинов',C:'въглехидратен',F:'мазнинен'}[f[1]]; hint.textContent=`1 ${t} блок = ${f[3]} ${f[2]}`; } }
+  if(f){
+    unitEl.textContent=f[2];
+    if(f[1]==='M') hint.textContent=`Смесена: ~1 П + 1 В блок на ${f[3]} ${f[2]}`;
+    else if(f[1]==='X') hint.textContent=`П+В+М: 1 П блок/${f[3]}${f[2]} · 1 В блок/${f[4]}${f[2]} · 1 М блок/${f[5]}${f[2]}`;
+    else { const t={P:'протеинов',C:'въглехидратен',F:'мазнинен'}[f[1]]; hint.textContent=`1 ${t} блок = ${f[3]} ${f[2]}`; }
+  }
   else { unitEl.textContent='г'; hint.textContent=''; }
 }
 
@@ -1615,7 +1631,7 @@ function foodPickChanged(){
    most mobile browsers and hides valid results like typing
    "кисело" not finding "Гръцко кисело мляко").
    ============================================================ */
-const FOOD_TYPE_LBL={P:'П',C:'В',F:'М',M:'П+В'};
+const FOOD_TYPE_LBL={P:'П',C:'В',F:'М',M:'П+В',X:'П+В+М'};
 function foodMatches(q){
   q=q.trim().toLowerCase();
   if(!q) return [];
@@ -1676,24 +1692,27 @@ function renderDbMacroFields(){
     el.innerHTML=`<div class="manual-blocks" style="grid-template-columns:1fr"><div><label>${lbl} (г) ${basisLbl}</label><input id="dbSingle" type="text" inputmode="decimal" placeholder="0"></div></div>`;
   }
 }
+function foodNameTaken(name){ return Object.keys(FOOD_MAP).some(n=>n.toLowerCase()===name.toLowerCase()); }
+function blockRate(macroVal,type,per100){
+  const T100={P:700,C:900,F:150}, T1={P:7,C:9,F:1.5};
+  const t=per100?T100[type]:T1[type];
+  return Math.round((t/macroVal)*10)/10;
+}
 function addCustomFood(){
   const name=document.getElementById('dbName').value.trim();
   const unit=document.getElementById('dbUnit').value;
   if(!name){ toast('Въведи име на храната'); return; }
-  const exists=Object.keys(FOOD_MAP).some(n=>n.toLowerCase()===name.toLowerCase());
-  if(exists){ toast('Вече има храна с това име'); return; }
+  if(foodNameTaken(name)){ toast('Вече има храна с това име'); return; }
   const per100 = unit!=='бр';
-  const T100={P:700,C:900,F:150}, T1={P:7,C:9,F:1.5};
-  const calcN=(macroVal,type)=>{ const t=per100?T100[type]:T1[type]; return Math.round((t/macroVal)*10)/10; };
   let entry;
   if(dbType==='M'){
     const p=num(document.getElementById('dbP').value), c=num(document.getElementById('dbC').value);
     if(!(p>0) || !(c>0)){ toast('Въведи протеин и въглехидрати'); return; }
-    entry=[name,'M',unit,calcN(p,'P'),calcN(c,'C')];
+    entry=[name,'M',unit,blockRate(p,'P',per100),blockRate(c,'C',per100)];
   } else {
     const v=num(document.getElementById('dbSingle').value);
     if(!(v>0)){ toast('Въведи стойност'); return; }
-    entry=[name,dbType,unit,calcN(v,dbType)];
+    entry=[name,dbType,unit,blockRate(v,dbType,per100)];
   }
   state.customFoods.push(entry);
   DB.set(K.customFoods,state.customFoods);
@@ -1711,9 +1730,11 @@ function removeCustomFood(name){
 function renderCustomFoodList(){
   const el=document.getElementById('customFoodList'); if(!el) return;
   if(!state.customFoods.length){ el.innerHTML=''; return; }
-  const TYPE_LBL={P:'Протеин',C:'Въглехидрати',F:'Мазнини',M:'Смесена'};
+  const TYPE_LBL={P:'Протеин',C:'Въглехидрати',F:'Мазнини',M:'Смесена',X:'П+В+М (от етикет)'};
   el.innerHTML='<div class="eyebrow" style="margin-top:14px">Твоите добавени храни</div>'+state.customFoods.map(f=>{
-    const meta = f[1]==='M' ? `1 П блок = ${f[3]}${f[2]} · 1 В блок = ${f[4]}${f[2]}` : `${TYPE_LBL[f[1]]} · 1 блок = ${f[3]} ${f[2]}`;
+    const meta = f[1]==='M' ? `1 П блок = ${f[3]}${f[2]} · 1 В блок = ${f[4]}${f[2]}`
+      : f[1]==='X' ? `1 П блок = ${f[3]}${f[2]} · 1 В блок = ${f[4]}${f[2]} · 1 М блок = ${f[5]}${f[2]}`
+      : `${TYPE_LBL[f[1]]} · 1 блок = ${f[3]} ${f[2]}`;
     return `<div class="lib-row">
       <div class="lib-info"><div class="lib-name">${f[0]}</div><div class="lib-meta">${meta}</div></div>
       <button class="ex-rm" data-dbdel="${f[0].replace(/"/g,'&quot;')}" title="Изтрий">×</button>
@@ -2051,6 +2072,30 @@ document.getElementById('scanOcrBtn').onclick=async()=>{
   }catch(e){
     status.textContent='⚠️ Разпознаването не проработи (провери интернет връзката) — въведи числата ръчно долу.';
   }
+};
+document.getElementById('scanSaveDb').onclick=()=>{
+  const name=document.getElementById('scanName').value.trim();
+  const unit=document.getElementById('scanUnit').value;
+  if(!name){ toast('Въведи име на храната'); return; }
+  if(foodNameTaken(name)){ toast('Вече има храна с това име'); return; }
+  const {p,c,f}=scanLabelValues();
+  if(p<=0 && c<=0 && f<=0){ toast('Въведи поне една стойност от етикета'); return; }
+  // saved database entries always use the standard 1.5г/block fat rule
+  // (the "protein powder -> 3г/block" toggle only affects today's ad-hoc diary log below)
+  const has={p:p>0,c:c>0,f:f>0};
+  let entry;
+  if(has.p && has.c && has.f) entry=[name,'X',unit,blockRate(p,'P',true),blockRate(c,'C',true),blockRate(f,'F',true)];
+  else if(has.p && has.c) entry=[name,'M',unit,blockRate(p,'P',true),blockRate(c,'C',true)];
+  else if(has.p && has.f) entry=[name,'X',unit,blockRate(p,'P',true),1e9,blockRate(f,'F',true)];
+  else if(has.c && has.f) entry=[name,'X',unit,1e9,blockRate(c,'C',true),blockRate(f,'F',true)];
+  else if(has.p) entry=[name,'P',unit,blockRate(p,'P',true)];
+  else if(has.c) entry=[name,'C',unit,blockRate(c,'C',true)];
+  else entry=[name,'F',unit,blockRate(f,'F',true)];
+  state.customFoods.push(entry);
+  DB.set(K.customFoods,state.customFoods);
+  rebuildFoodIndex();
+  renderCustomFoodList();
+  toast('Храната е запазена в базата ✓');
 };
 document.getElementById('scanAddLog').onclick=()=>{
   const name=document.getElementById('scanName').value.trim()||'От етикет';
