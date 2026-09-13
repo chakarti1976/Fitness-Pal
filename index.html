@@ -18,8 +18,8 @@
     --ink-2:#131c2b;
     --card:#182233;
     --card-2:#1f2c40;
-    --line:rgba(255,255,255,.08);
-    --line-2:rgba(255,255,255,.14);
+    --line:rgba(255,255,255,.06);
+    --line-2:rgba(255,255,255,.12);
     --text:#EAF0F8;
     --muted:#8494AB;
     --muted-2:#5f6f86;
@@ -29,19 +29,27 @@
     --record-dim:#123027;
     --danger:#FF6B57;
     --nav-h:64px;
+    --nav-gap:14px;
+    --sys-font:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Inter',system-ui,sans-serif;
+    --ease:cubic-bezier(.22,1,.36,1);
+    --shadow-card:0 1px 2px rgba(0,0,0,.30), 0 10px 26px -10px rgba(0,0,0,.45);
+    --shadow-float:0 14px 36px -8px rgba(0,0,0,.55);
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{background:var(--ink);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.45}
-  body{max-width:640px;margin:0 auto;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));min-height:100vh;position:relative}
-  .num{font-family:'Space Mono',monospace}
-  h1,h2,h3{font-family:'Anton',sans-serif;font-weight:400;letter-spacing:.5px;text-transform:uppercase;line-height:1}
+  html,body{background:var(--ink);color:var(--text);font-family:var(--sys-font);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
+  body{max-width:640px;margin:0 auto;padding-bottom:calc(var(--nav-h) + var(--nav-gap) + 22px + env(safe-area-inset-bottom));min-height:100vh;position:relative}
+  .num{font-family:'Space Mono',monospace;font-variant-numeric:tabular-nums}
+  h1,h2,h3{font-family:var(--sys-font);font-weight:800;letter-spacing:-.3px;line-height:1.15}
+  .section-title{font-weight:800}
   input,button,textarea,select{font-family:inherit;color:inherit}
+  button{transition:transform .15s var(--ease),opacity .15s var(--ease),background-color .15s var(--ease),border-color .15s var(--ease)}
+  button:active{transform:scale(.96);opacity:.85}
   a{color:var(--accent);text-decoration:none}
 
   /* ---- Header ---- */
-  header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,var(--ink) 70%,rgba(14,20,32,.85));backdrop-filter:blur(8px);padding:16px 18px 12px;border-bottom:1px solid var(--line)}
+  header{position:sticky;top:0;z-index:20;background:rgba(14,20,32,.72);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);padding:18px 18px 14px;border-bottom:1px solid var(--line)}
   .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-  .brand h1{font-size:26px}
+  .brand h1{font-family:'Anton',sans-serif;font-weight:400;letter-spacing:.4px;text-transform:uppercase;font-size:25px}
   .brand .accent{color:var(--accent)}
   .brand small{font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;font-weight:600}
   .gym{margin-top:4px;font-size:12px;color:var(--muted)}
@@ -128,13 +136,13 @@
   .feel button{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:9px;font-size:20px;cursor:pointer;transition:.15s}
   .feel button.sel{border-color:var(--accent);background:var(--accent-dim)}
 
-  .btn-primary{width:100%;background:var(--accent);color:#12151c;border:none;border-radius:14px;padding:15px;font-family:'Anton';font-size:17px;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;margin-bottom:8px;transition:.15s}
-  .btn-primary:active{transform:scale(.99)}
-  .btn-primary:disabled{opacity:.4;cursor:not-allowed}
-  .btn-ghost{width:100%;background:transparent;border:1px solid var(--line-2);color:var(--muted);border-radius:12px;padding:11px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn-primary{width:100%;background:var(--accent);color:#12151c;border:none;border-radius:16px;padding:16px;font-family:'Anton';font-size:17px;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;margin-bottom:8px;box-shadow:0 8px 20px -6px rgba(255,197,61,.45)}
+  .btn-primary:active{transform:scale(.97)}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+  .btn-ghost{width:100%;background:var(--ink-2);border:1px solid var(--line);color:var(--muted);border-radius:14px;padding:12px;font-size:13px;font-weight:600;cursor:pointer}
 
   /* rest timer */
-  .rest{position:sticky;bottom:calc(var(--nav-h) + 10px);z-index:15;background:var(--card-2);border:1px solid var(--line-2);border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin:14px 0;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+  .rest{position:sticky;bottom:calc(var(--nav-h) + var(--nav-gap) + 14px);z-index:15;background:var(--card-2);border:1px solid var(--line-2);border-radius:16px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin:14px 0;box-shadow:var(--shadow-float)}
   .rest .disp{font-family:'Space Mono';font-size:22px;font-weight:700;min-width:64px}
   .rest .disp.run{color:var(--accent)}
   .rest-btns{display:flex;gap:6px;flex-wrap:wrap;flex:1;justify-content:flex-end}
@@ -201,14 +209,15 @@
   .principle .n{font-family:'Anton';color:var(--accent);font-size:16px;flex:0 0 auto;width:22px}
 
   /* bottom nav */
-  nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--ink-2);border-top:1px solid var(--line);display:flex;z-index:30}
-  nav .inner{max-width:640px;margin:0 auto;width:100%;display:flex}
-  nav button{flex:1;background:none;border:none;color:var(--muted-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font-size:9px;font-weight:600;letter-spacing:.2px;padding-top:8px}
+  nav{position:fixed;bottom:calc(var(--nav-gap) + env(safe-area-inset-bottom));left:14px;right:14px;max-width:612px;margin:0 auto;height:var(--nav-h);background:rgba(19,28,43,.78);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border:1px solid var(--line-2);border-radius:24px;display:flex;z-index:30;box-shadow:var(--shadow-float)}
+  nav .inner{max-width:640px;margin:0 auto;width:100%;display:flex;border-radius:inherit}
+  nav button{flex:1;background:none;border:none;color:var(--muted-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;font-size:9px;font-weight:600;letter-spacing:.2px}
   nav button svg{width:20px;height:20px}
-  nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2}
+  nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;transition:transform .2s var(--ease)}
   nav button.active{color:var(--accent)}
+  nav button.active svg{transform:translateY(-1px) scale(1.06)}
 
-  .toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 24px);transform:translateX(-50%) translateY(20px);background:var(--record);color:#0c1a15;padding:12px 20px;border-radius:12px;font-weight:700;font-size:14px;z-index:50;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap}
+  .toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + var(--nav-gap) + 22px);transform:translateX(-50%) translateY(20px);background:rgba(28,40,58,.85);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);color:var(--record);border:1px solid rgba(55,224,176,.3);padding:12px 20px;border-radius:16px;font-weight:700;font-size:14px;z-index:50;opacity:0;transition:.35s var(--ease);pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-float)}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   /* cardio */
   .cardio-card .cardio-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
@@ -305,6 +314,27 @@
   .balrow-sub{font-size:12px;color:var(--muted);font-family:'Space Mono';margin:9px 0}
   .balrow-note{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:9px;padding:9px;font-size:13px;color:var(--text)}
   .balrow-note:focus{outline:none;border-color:var(--accent)}
+
+  /* ---- elevation: consistent iOS-style card depth ---- */
+  .ex,.session-extras,.hist,.stat,.info-card,.food-add,.ztotals,.profile-box,
+  .balrow,.log-item,.flog,.day-pill,.lib-wrap,.lib-row{
+    box-shadow:var(--shadow-card);
+  }
+  .day-pill,.meal-btn,.vid,.subtab,.lib-add-btn{transition:transform .15s var(--ease),background-color .15s var(--ease),border-color .15s var(--ease),color .15s var(--ease)}
+  .day-pill:active,.meal-btn:active,.vid:active,.lib-add-btn:active{transform:scale(.95)}
+
+  /* ---- Core / waist exercise library ---- */
+  .lib-wrap{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:4px 0 12px}
+  .lib-note{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.45}
+  .lib-row{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--ink-2);border:1px solid var(--line);border-radius:13px;padding:11px 12px;margin-bottom:8px}
+  .lib-row:last-child{margin-bottom:0}
+  .lib-info{min-width:0}
+  .lib-name{font-size:13.5px;font-weight:700;line-height:1.3}
+  .lib-meta{font-size:11px;color:var(--muted);margin-top:2px}
+  .lib-add-btn{flex:0 0 auto;background:var(--accent);color:#12151c;border:none;border-radius:11px;padding:9px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+  .lib-add-btn.added{background:transparent;border:1px solid var(--line-2);color:var(--muted-2);cursor:default}
+  .ex-rm{background:none;border:none;color:var(--muted-2);font-size:20px;cursor:pointer;padding:2px 4px;line-height:1;flex:0 0 auto}
+  .ex-rm:hover{color:var(--danger)}
 </style>
 </head>
 <body>
@@ -585,6 +615,28 @@ const EX_INDEX = {}; // id -> {name, dayKey}
 Object.entries(PROGRAM).forEach(([dk,d])=>d.ex.forEach(e=>EX_INDEX[e[0]]={name:e[1],day:dk}));
 
 /* ============================================================
+   CORE / WAIST LIBRARY — упражнения за корем и талия, подбрани
+   за мъже 50–60 г. (гръбначно неутрални, без резки ротации,
+   контролирано темпо). Добавят се по избор към всеки ден.
+   ============================================================ */
+const CORE_LIBRARY = [
+  ['coreDeadBug','Мъртва буболечка','Dead Bug','Постелка',3,'8–10 на страна','Дълбок корем','deadBug'],
+  ['coreBirdDog','Птица-куче','Bird Dog','Постелка',3,'8–10 на страна','Корем / долен гръб','birdDog'],
+  ['coreSidePlank','Странична планка','Side Plank','Постелка',3,'20–40 сек на страна','Кос корем (талия)','sidePlank'],
+  ['corePalloff','Антиротационна преса (Pallof)','Pallof Press','Кабел или ластик, стойка отстрани',3,'10–12 на страна','Кос корем (талия)','palloffPress'],
+  ['coreObliqueStand','Странично коремно право','Standing Oblique Crunch','Без уред (или лек дъмбел)',3,'12–15 на страна','Кос корем (талия)','standingOblique'],
+  ['coreSuitcase','Носене тип „куфар"','Suitcase Carry','Дъмбел или гира (една ръка)',3,'20–30 крачки на страна','Талия / стабилизатори','suitcaseCarry'],
+  ['coreWoodchop','Кабелно „дърво-сечене"','Cable Woodchopper','Кабелна станция (високо → ниско)',3,'10–12 на страна','Кос корем (талия)','cableWoodchop'],
+  ['coreReverseCrunch','Обратен крънч','Reverse Crunch','Постелка',3,'10–15','Долен корем','reverseCrunch'],
+  ['coreBallCrunch','Крънч на фитбол','Stability Ball Crunch','Фитбол',3,'12–15','Корем (директен)','ballCrunch'],
+  ['coreBridgeMarch','Мост с ходене','Glute Bridge March','Постелка',3,'10–12 на страна','Корем / седалище','bridgeMarch'],
+  ['coreVacuum','Стомашен вакуум','Stomach Vacuum','Без уред',3,'15–20 сек × 5 дишания','Напречен корем (талия)','stomachVacuum'],
+  ['coreCableRotation','Права ротация на кабел','Standing Cable Rotation','Кабелна станция (на гърдите)',3,'10–12 на страна','Кос корем (талия)','cableRotation'],
+  ['coreMcgill','Коремно повдигане (МакГил)','McGill Curl-Up','Постелка, ръка под кръста',3,'6–8 на страна','Корем (директен)','mcgillCurlUp'],
+];
+const CORE_MAP={}; CORE_LIBRARY.forEach(e=>{ CORE_MAP[e[0]]=e; EX_INDEX[e[0]]={name:e[1],day:'core'}; });
+
+/* ============================================================
    EXERCISE ILLUSTRATIONS (own schematic SVG — no external media)
    figure=silhouette · yellow=equipment/arrow=movement direction
    ============================================================ */
@@ -624,6 +676,20 @@ const EX_ART={
   cablePullover:()=>`${G}<path class="grd" d="M96 12 V72"/><line class="eq" x1="96" y1="14" x2="70" y2="30"/><line class="eq" x1="62" y1="27" x2="74" y2="33"/><circle class="head" cx="44" cy="30" r="6"/><path class="fig" d="M44 36 L50 56"/><path class="fig" d="M50 56 l-6 20 M50 56 l6 20"/><path class="fig" d="M46 40 L68 30"/><path class="arw" d="M78 34 q7 16 -8 24"/><path class="arw" d="M66 56 l4 4 l2 -6"/>`,
   frontRaise:()=>`${G}<circle class="head" cx="48" cy="28" r="6"/><path class="fig" d="M48 34 V56"/><path class="fig" d="M48 56 l-7 20 M48 56 l7 20"/><path class="fig" d="M48 40 L72 40"/><rect class="eqf" x="70" y="35" width="5" height="10" rx="1"/>${up(90,54,38)}`,
   smithSquat:()=>`${G}<path class="grd" d="M32 8 V74 M88 8 V74"/><circle class="head" cx="60" cy="26" r="6"/><path class="fig" d="M60 32 V48"/><path class="fig" d="M60 48 L50 58 L52 76"/><path class="fig" d="M60 48 L70 58 L68 76"/><path class="fig" d="M46 34 H74"/><line class="eq" x1="32" y1="34" x2="88" y2="34"/><circle class="eqf" cx="46" cy="34" r="3"/><circle class="eqf" cx="74" cy="34" r="3"/>${up(100,54,36)}`,
+  /* ---- корем / талия библиотека ---- */
+  deadBug:()=>`${G}<circle class="head" cx="22" cy="44" r="6"/><path class="fig" d="M28 44 H68"/><path class="fig" d="M44 44 V60 L38 74"/><path class="fig" d="M56 44 V60 L64 74"/><path class="fig" d="M50 44 L44 28"/><path class="fig" d="M50 44 L64 34"/>${up(44,26,16)}${dn(66,58,72)}`,
+  birdDog:()=>`${G}<path class="fig" d="M30 60 H78"/><circle class="head" cx="24" cy="56" r="6"/><path class="fig" d="M40 60 V74"/><path class="fig" d="M64 60 V74"/><path class="fig" d="M78 60 L92 52"/><path class="fig" d="M40 60 L28 50"/>${up(92,50,40)}`,
+  sidePlank:()=>`${G}<circle class="head" cx="26" cy="50" r="6"/><path class="fig" d="M32 52 L88 46"/><path class="fig" d="M40 54 L34 68"/><path class="fig" d="M88 46 L94 60"/><path class="fig" d="M40 54 V70"/>`,
+  palloffPress:()=>`${G}<path class="grd" d="M14 20 V72"/><line class="eq" x1="14" y1="40" x2="46" y2="46"/><circle class="head" cx="58" cy="30" r="6"/><path class="fig" d="M58 36 V58"/><path class="fig" d="M58 58 l-7 18 M58 58 l7 18"/><path class="fig" d="M58 44 H86"/>${up(94,44,32)}`,
+  standingOblique:()=>`${G}<circle class="head" cx="52" cy="26" r="6"/><path class="fig" d="M52 32 L58 52"/><path class="fig" d="M58 52 L70 74"/><path class="fig" d="M58 52 L44 62 L40 74"/><path class="fig" d="M52 38 L38 46"/>${dn(30,30,44)}`,
+  suitcaseCarry:()=>`${G}<circle class="head" cx="54" cy="26" r="6"/><path class="fig" d="M54 32 V58"/><path class="fig" d="M54 58 L44 76 M54 58 L66 76"/><path class="fig" d="M54 38 L40 60"/><rect class="eqf" x="34" y="58" width="10" height="14" rx="2"/><path class="fig" d="M54 38 L70 44"/>`,
+  cableWoodchop:()=>`${G}<path class="grd" d="M100 12 V70"/><line class="eq" x1="100" y1="16" x2="60" y2="30"/><circle class="head" cx="50" cy="34" r="6"/><path class="fig" d="M50 40 L56 58"/><path class="fig" d="M56 58 L46 70 M56 58 L66 70"/><path class="fig" d="M50 44 L30 60"/>${dn(24,44,64)}`,
+  reverseCrunch:()=>`${G}<circle class="head" cx="24" cy="60" r="6"/><path class="fig" d="M30 60 H58"/><path class="fig" d="M58 60 L52 42 L64 34"/>${up(64,50,32)}`,
+  ballCrunch:()=>`${G}<ellipse class="eqf" cx="46" cy="58" rx="20" ry="14"/><circle class="head" cx="70" cy="38" r="6"/><path class="fig" d="M70 44 L60 56"/><path class="fig" d="M60 56 L48 66 M60 56 L70 68"/>${up(90,44,30)}`,
+  bridgeMarch:()=>`${G}<circle class="head" cx="24" cy="58" r="6"/><path class="fig" d="M30 58 L52 52"/><path class="fig" d="M52 52 L68 58 L68 74"/><path class="fig" d="M52 52 L46 34 L52 24"/>${up(40,32,20)}`,
+  stomachVacuum:()=>`${G}<circle class="head" cx="60" cy="26" r="6"/><path class="fig" d="M60 32 V40 Q54 50 60 58 Q66 50 60 40"/><path class="fig" d="M60 58 l-7 18 M60 58 l7 18"/><path class="fig" d="M60 36 L48 44"/><path class="fig" d="M60 36 L72 44"/><text x="60" y="76" fill="#8494AB" font-size="9" font-family="Space Mono" text-anchor="middle">издишай</text>`,
+  cableRotation:()=>`${G}<path class="grd" d="M100 16 V70"/><line class="eq" x1="100" y1="40" x2="66" y2="42"/><circle class="head" cx="54" cy="34" r="6"/><path class="fig" d="M54 40 V58"/><path class="fig" d="M54 58 l-7 18 M54 58 l7 18"/><path class="fig" d="M54 44 H30"/>${dn(24,44,60)}`,
+  mcgillCurlUp:()=>`${G}<circle class="head" cx="26" cy="48" r="6"/><path class="fig" d="M32 50 H60"/><path class="fig" d="M60 50 L66 62 L64 74"/><path class="fig" d="M46 50 L44 62 L52 66"/>${up(30,44,34)}`,
   _default:()=>`${G}<circle class="head" cx="60" cy="34" r="6"/><path class="fig" d="M60 40 V60 M60 60 l-7 16 M60 60 l7 16 M48 48 H72"/><rect class="eqf" x="44" y="45" width="4" height="8" rx="1"/><rect class="eqf" x="72" y="45" width="4" height="8" rx="1"/>`
 };
 /* muscle-highlight points per movement (teal dot on the figure) */
@@ -636,7 +702,11 @@ const HL={
   cableCrunch:[[55,53]], dip:[[58,40]], overheadTri:[[61,32]], plank:[[58,58]],
   deadlift:[[60,47]], dbRow:[[54,46]], reverseFly:[[56,42]], legPress:[[60,52]],
   splitSquat:[[47,56]], hipThrust:[[52,49]], legExtension:[[50,58]],
-  cablePullover:[[49,46]], frontRaise:[[51,40]], smithSquat:[[54,54],[66,54]]
+  cablePullover:[[49,46]], frontRaise:[[51,40]], smithSquat:[[54,54],[66,54]],
+  deadBug:[[50,46]], birdDog:[[55,60]], sidePlank:[[60,50]], palloffPress:[[58,46]],
+  standingOblique:[[56,50]], suitcaseCarry:[[54,50]], cableWoodchop:[[52,50]],
+  reverseCrunch:[[58,52]], ballCrunch:[[60,52]], bridgeMarch:[[52,50]],
+  stomachVacuum:[[60,42]], cableRotation:[[54,46]], mcgillCurlUp:[[46,54]]
 };
 /* one-line form cue per movement */
 const CUES={
@@ -671,7 +741,20 @@ const CUES={
   legExtension:'Изпъни коленете контролирано до горе, задръж кратко и сваляй бавно.',
   cablePullover:'Ръцете почти изпънати, движение само в раменете; издърпай надолу в дъга и усети лата.',
   frontRaise:'Неутрален хват, лек завой в лакътя; вдигни право напред до височина на раменете, без замах.',
-  smithSquat:'Ходилата леко пред лоста; свали контролирано до паралел, петите заковани, гърди горе.'
+  smithSquat:'Ходилата леко пред лоста; свали контролирано до паралел, петите заковани, гърди горе.',
+  deadBug:'Кръстът залепен за пода през цялото време; спускай ръка и противоположен крак бавно и контролирано.',
+  birdDog:'Таз неподвижен, без завъртане; изпъни ръка и противоположния крак в права линия и задръж кратко.',
+  sidePlank:'Тяло в права линия от рамо до глезен; таз не пада надолу — стегни кръста отстрани.',
+  palloffPress:'Застани странично на кабела; изтласкай напред без да позволяваш на торса да се завърти.',
+  standingOblique:'Бавно и контролирано движение — сведи лакътя към повдигнатото коляно отстрани, без дърпане с врата.',
+  suitcaseCarry:'Изправен, раменете нива; върви бавно и не се наклонявай към страната с тежестта.',
+  cableWoodchop:'Завъртането идва от торса и таза, не само от ръцете; контролирана скорост, без замах.',
+  reverseCrunch:'Повдигни таза със силата на долния корем, не с инерция на краката; сваляй бавно.',
+  ballCrunch:'Долната част на гърба остава подпряна на топката; повдигни само горната част на торса.',
+  bridgeMarch:'Тазът стабилен и вдигнат през цялото време; повдигай коляното без да килваш таза настрани.',
+  stomachVacuum:'Издишай напълно и дръпни пъпа навътре към гръбнака; дишай леко и задръж позата.',
+  cableRotation:'Ротацията идва от таза и торса с изправен гръб; контролирай връщането назад, без замах.',
+  mcgillCurlUp:'Ръка под извивката на кръста за опора; повдигни само главата и раменете на няколко см — без пълен коремен crunch.'
 };
 function hlMarks(p){ return (HL[p]||[]).map(([x,y])=>`<circle class="hl-glow" cx="${x}" cy="${y}" r="7"/><circle class="hl-dot" cx="${x}" cy="${y}" r="2.6"/>`).join(''); }
 function art(p){ const f=EX_ART[p]||EX_ART._default; return `<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">${f()}${hlMarks(p)}</svg>`; }
@@ -713,8 +796,57 @@ function renderDaySelector(){
   el.querySelectorAll('.day-pill').forEach(p=>p.onclick=()=>{ currentDay=p.dataset.day; renderDaySelector(); renderWorkout(); });
 }
 
-function getDraft(){ if(!state.draft[currentDay]) state.draft[currentDay]={sets:{},notes:'',feel:'',cardio:{}}; if(!state.draft[currentDay].cardio) state.draft[currentDay].cardio={}; return state.draft[currentDay]; }
+function getDraft(){ if(!state.draft[currentDay]) state.draft[currentDay]={sets:{},notes:'',feel:'',cardio:{},extra:[]}; if(!state.draft[currentDay].cardio) state.draft[currentDay].cardio={}; if(!state.draft[currentDay].extra) state.draft[currentDay].extra=[]; return state.draft[currentDay]; }
 function saveDraft(){ DB.set(K.draft,state.draft); }
+
+function exCardHtml(id,name,en,gear,sets,reps,muscle,pattern,removable){
+  const draft=getDraft();
+  const last=lastSessionFor(id);
+  if(!draft.sets[id]){ // initialise rows = target set count
+    draft.sets[id]=Array.from({length:sets},(_,i)=>({reps:'',kg: last&&last.sets[i]?last.sets[i].kg:''}));
+  }
+  let prevTxt='';
+  if(last){ prevTxt=last.sets.map(s=>`${s.kg||'–'}кг×${s.reps||'–'}`).join('  ·  '); }
+  return `<div class="ex" data-ex="${id}">
+    <div class="ex-top">
+      <div>
+        <div class="ex-name">${name}</div>
+        <div class="ex-meta"><span class="tag muscle">${muscle}</span><span class="tag">Цел ${sets}×${reps}</span></div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex:0 0 auto">
+        <a class="vid" href="${vidUrl(en)}" target="_blank" rel="noopener">
+          <svg width="12" height="12" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>видео
+        </a>
+        ${removable?`<button class="ex-rm" data-exrm="${id}" title="Премахни от деня">×</button>`:''}
+      </div>
+    </div>
+    <div class="exart">${art(pattern)}</div>
+    ${CUES[pattern]?`<div class="cue"><span>◆</span><span>${CUES[pattern]}</span></div>`:''}
+    <div class="gear">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8494AB" stroke-width="2"><path d="M6 6h12M6 18h12M9 6v12M15 6v12M3 9v6M21 9v6"/></svg>
+      <span>${gear}</span>
+    </div>
+    ${last?`<div class="prev"><span class="lbl">Миналия път ${fmtDate(last.date)}</span><span class="num">${prevTxt}</span></div>`:''}
+    <div class="colhead"><span></span><span>Повт.</span><span></span><span>Кг</span><span></span></div>
+    <div class="sets" data-sets="${id}"></div>
+    <button class="add-set" data-add="${id}">+ серия</button>
+  </div>`;
+}
+
+function addCoreEx(id){
+  const draft=getDraft();
+  if(draft.extra.includes(id)) return;
+  draft.extra.push(id);
+  saveDraft();
+  renderWorkout();
+}
+function removeCoreEx(id){
+  const draft=getDraft();
+  draft.extra=draft.extra.filter(x=>x!==id);
+  delete draft.sets[id];
+  saveDraft();
+  renderWorkout();
+}
 
 function renderWorkout(){
   const d=PROGRAM[currentDay];
@@ -724,36 +856,35 @@ function renderWorkout(){
 
   d.ex.forEach(e=>{
     const [id,name,en,gear,sets,reps,muscle,pattern]=e;
-    const last=lastSessionFor(id);
-    const best=bestSetFor(id);
-    if(!draft.sets[id]){ // initialise rows = target set count
-      draft.sets[id]=Array.from({length:sets},(_,i)=>({reps:'',kg: last&&last.sets[i]?last.sets[i].kg:''}));
-    }
-    let prevTxt='';
-    if(last){ prevTxt=last.sets.map(s=>`${s.kg||'–'}кг×${s.reps||'–'}`).join('  ·  '); }
-
-    html+=`<div class="ex" data-ex="${id}">
-      <div class="ex-top">
-        <div>
-          <div class="ex-name">${name}</div>
-          <div class="ex-meta"><span class="tag muscle">${muscle}</span><span class="tag">Цел ${sets}×${reps}</span></div>
-        </div>
-        <a class="vid" href="${vidUrl(en)}" target="_blank" rel="noopener">
-          <svg width="12" height="12" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>видео
-        </a>
-      </div>
-      <div class="exart">${art(pattern)}</div>
-      ${CUES[pattern]?`<div class="cue"><span>◆</span><span>${CUES[pattern]}</span></div>`:''}
-      <div class="gear">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8494AB" stroke-width="2"><path d="M6 6h12M6 18h12M9 6v12M15 6v12M3 9v6M21 9v6"/></svg>
-        <span>${gear}</span>
-      </div>
-      ${last?`<div class="prev"><span class="lbl">Миналия път ${fmtDate(last.date)}</span><span class="num">${prevTxt}</span></div>`:''}
-      <div class="colhead"><span></span><span>Повт.</span><span></span><span>Кг</span><span></span></div>
-      <div class="sets" data-sets="${id}"></div>
-      <button class="add-set" data-add="${id}">+ серия</button>
-    </div>`;
+    html+=exCardHtml(id,name,en,gear,sets,reps,muscle,pattern,false);
   });
+
+  // added core/waist library exercises for today
+  if(draft.extra.length){
+    html+='<div class="eyebrow" style="margin-top:4px">Добавени · Корем / Талия</div>';
+    draft.extra.forEach(id=>{
+      const e=CORE_MAP[id]; if(!e) return;
+      const [,name,en,gear,sets,reps,muscle,pattern]=e;
+      html+=exCardHtml(id,name,en,gear,sets,reps,muscle,pattern,true);
+    });
+  }
+
+  // core / waist exercise library browser
+  html+=`<div class="lib-wrap">
+    <div class="eyebrow">Библиотека · Корем и талия</div>
+    <div class="lib-note">Подбрани за мъже 50–60 г. — гръбначно неутрални движения и бавно темпо, без резки завъртания. Добави толкова, колкото искаш към днешния ден.</div>
+    ${CORE_LIBRARY.map(e=>{
+      const [id,name,,gear,sets,reps,muscle]=e;
+      const added=draft.extra.includes(id);
+      return `<div class="lib-row">
+        <div class="lib-info">
+          <div class="lib-name">${name}</div>
+          <div class="lib-meta">${muscle} · ${sets}×${reps} · ${gear}</div>
+        </div>
+        <button class="lib-add-btn ${added?'added':''}" data-libadd="${id}" ${added?'disabled':''}>${added?'Добавено ✓':'+ Добави'}</button>
+      </div>`;
+    }).join('')}
+  </div>`;
 
   // cardio + calories
   const cw=draft.cardio||{};
@@ -799,6 +930,7 @@ function renderWorkout(){
 
   // render set rows
   d.ex.forEach(e=>renderSets(e[0]));
+  draft.extra.forEach(id=>renderSets(id));
 
   // wire extras
   document.getElementById('sessNotes').addEventListener('input',ev=>{ draft.notes=ev.target.value; saveDraft(); });
@@ -809,6 +941,8 @@ function renderWorkout(){
   area.querySelectorAll('[data-rest]').forEach(b=>b.onclick=()=>startRest(parseInt(b.dataset.rest)));
   document.getElementById('restStop').onclick=stopRest;
   area.querySelectorAll('[data-cardio]').forEach(inp=>inp.addEventListener('input',ev=>{ getDraft().cardio[ev.target.dataset.cardio]=ev.target.value; saveDraft(); updateBurn(); }));
+  area.querySelectorAll('[data-libadd]').forEach(b=>b.onclick=()=>addCoreEx(b.dataset.libadd));
+  area.querySelectorAll('[data-exrm]').forEach(b=>b.onclick=()=>removeCoreEx(b.dataset.exrm));
   updateBurn();
 }
 
@@ -848,6 +982,11 @@ function saveWorkout(){
   const exercises=[];
   d.ex.forEach(e=>{
     const id=e[0];
+    const sets=(draft.sets[id]||[]).filter(s=>num(s.reps)>0 || num(s.kg)>0).map(s=>({reps:s.reps,kg:s.kg}));
+    if(sets.length) exercises.push({id,name:e[1],sets});
+  });
+  draft.extra.forEach(id=>{
+    const e=CORE_MAP[id]; if(!e) return;
     const sets=(draft.sets[id]||[]).filter(s=>num(s.reps)>0 || num(s.kg)>0).map(s=>({reps:s.reps,kg:s.kg}));
     if(sets.length) exercises.push({id,name:e[1],sets});
   });
@@ -1125,6 +1264,22 @@ const FOODS=[
   ['Яйце цяло','F','бр',1],['Пъдпъдъчи яйца','F','бр',6],
   // ---- СМЕСЕНИ (П + В на посочения грамаж) ----
   ['Кисело мляко 2%','M','г',200,200],['Прясно мляко 1.5–3%','M','г',200,200],['Кефир 1%','M','г',250,250],
+  // ---- ДОПЪЛНЕНИЕ (изчислени по формулата на Зоната 7г П/9г В/1.5г М — vzonata.com не бе достъпен от тази среда) ----
+  // ---- протеини (доп.) ----
+  ['Пъстърва (риба)','P','г',35],['Херинга','P','г',39],['Едамаме (варено)','P','г',64],
+  ['Тофу пушено','P','г',56],['Гръцко кисело мляко 0%','P','г',70],['Протеинов бар (типичен)','P','г',35],
+  ['Риба/сьомга консерва в собствен сок','P','г',30],['Пилешки крилца (без кожа)','P','г',32],
+  // ---- въглехидрати · зеленчуци (доп.) ----
+  ['Спанак (пресен)','C','г',250],['Рукола','C','г',245],['Аспержи (сварени)','C','г',230],
+  ['Брюкселско зеле (сварено)','C','г',100],['Маруля','C','г',310],['Целина на стръкове','C','г',300],
+  // ---- въглехидрати · плодове (доп.) ----
+  ['Папая','C','г',82],['Личи','C','г',55],['Маракуя (пасион плод)','C','г',39],
+  // ---- въглехидрати · зърнени (доп.) ----
+  ['Булгур (сварен)','C','г',47],['Кус-кус (сварен)','C','г',39],['Киноа (сварена)','C','г',42],['Полба/спелта (сварена)','C','г',41],
+  // ---- мазнини (доп.) ----
+  ['Макадамия ядки','F','г',2],['Кокосово мляко (пълномаслено)','F','мл',6],['Кашу крема (паста)','F','г',3],
+  // ---- смесени (доп.) ----
+  ['Айран (натурален)','M','г',350,300],['Гръцко кисело мляко 2%','M','г',78,225],
 ];
 const FOOD_MAP={}; FOODS.forEach(f=>FOOD_MAP[f[0]]=f);
 
