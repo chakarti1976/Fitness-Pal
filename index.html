@@ -391,6 +391,24 @@
   .db-type-btn.sel{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
   .db-hint{font-size:11px;color:var(--muted-2);margin:2px 0 10px}
 
+  /* ---- label scanner ---- */
+  .scan-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow-card)}
+  .scan-card>input[type=text]{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:12px;font-size:14px}
+  .scan-card>input[type=text]:focus{outline:none;border-color:var(--accent)}
+  .scan-preview{width:100%;max-height:260px;object-fit:contain;border-radius:12px;background:var(--ink-2);margin-top:12px;display:block}
+  .scan-ocr-status{font-size:12px;color:var(--muted);margin-top:8px;min-height:14px}
+  .scan-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .scan-fields label{font-size:10.5px;color:var(--muted);display:block;margin-bottom:5px}
+  .scan-fields input{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:10px;font-family:'Space Mono';font-size:15px;text-align:center}
+  .scan-fields input:focus{outline:none;border-color:var(--accent)}
+  .scan-source-toggle{display:flex;flex-direction:column;gap:8px}
+  .scan-src-btn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;background:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;text-align:left}
+  .scan-src-btn small{font-weight:400;color:var(--muted-2);font-size:11px}
+  .scan-src-btn.sel{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+  .scan-src-btn.sel small{color:var(--accent)}
+  .scan-breakdown{margin-top:10px;font-size:11.5px;color:var(--muted-2);line-height:1.6;font-family:'Space Mono'}
+  .scan-note{margin-top:10px;font-size:12px;color:var(--muted);background:var(--ink-2);border-radius:10px;padding:9px 11px}
+
   /* ---- per-exercise progress chart ---- */
   .exprog-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow-card)}
   .exprog-card select{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:11px;font-size:14px;color:var(--text);margin-bottom:10px}
@@ -557,6 +575,55 @@
     <div id="foodLog"></div>
   </section>
 
+  <!-- ============ LABEL SCANNER ============ -->
+  <section id="view-scan" class="tab-view">
+    <div class="eyebrow">Изчисли от етикет</div>
+    <h2 class="section-title">Скенер на етикет</h2>
+    <p class="sub">Снимай хранителната таблица на опаковката (протеини / въглехидрати / мазнини на 100 г или мл) — блоковете по Зоната се изчисляват автоматично.</p>
+
+    <div class="scan-card">
+      <input type="file" id="scanFile" accept="image/*" capture="environment" style="display:none">
+      <button class="btn-primary" id="scanCaptureBtn">📷 Снимай етикет</button>
+      <div id="scanPreviewWrap" style="display:none">
+        <img id="scanPreview" class="scan-preview" alt="Снимка на етикет">
+        <button class="btn-ghost" id="scanOcrBtn" style="margin-top:10px">🔎 Разчети числата от снимката</button>
+        <div id="scanOcrStatus" class="scan-ocr-status"></div>
+      </div>
+    </div>
+
+    <div class="scan-card">
+      <div class="eyebrow">Стойности на 100 г/мл (от етикета)</div>
+      <div class="scan-fields">
+        <div><label>Протеини (г)</label><input id="scanProtein" type="text" inputmode="decimal" placeholder="0"></div>
+        <div><label>Въглехидрати (г)</label><input id="scanCarbs" type="text" inputmode="decimal" placeholder="0"></div>
+        <div><label>Мазнини (г)</label><input id="scanFat" type="text" inputmode="decimal" placeholder="0"></div>
+      </div>
+
+      <div class="eyebrow" style="margin-top:16px">Протеинов източник</div>
+      <div class="scan-source-toggle" id="scanSourceToggle">
+        <button type="button" class="scan-src-btn sel" data-src="meat">🍖 Месо / сирене / риба и под.<small>1.5 г мазнина = 1 блок</small></button>
+        <button type="button" class="scan-src-btn" data-src="powder">💊 Протеин на прах, 0% мазнини<small>3 г мазнина = 1 блок</small></button>
+      </div>
+    </div>
+
+    <div class="scan-card">
+      <div class="eyebrow">Блокове на 100 г/мл</div>
+      <div class="zblocks" id="scanBlocks100"></div>
+      <div class="scan-breakdown" id="scanBreakdown"></div>
+    </div>
+
+    <div class="scan-card">
+      <div class="eyebrow">Добави в дневника</div>
+      <input id="scanName" type="text" placeholder="Име на храната (напр. Сирене фета)">
+      <div class="food-qty-row" style="margin-top:9px">
+        <input id="scanQty" type="text" inputmode="decimal" placeholder="изядено количество" value="100">
+        <span class="food-unit">г</span>
+      </div>
+      <div class="zblocks" id="scanBlocksPortion" style="margin-top:12px"></div>
+      <button class="btn-primary" id="scanAddLog" style="margin-top:12px">Добави в дневника</button>
+    </div>
+  </section>
+
   <!-- ============ BALANCE ============ -->
   <section id="view-balance" class="tab-view">
     <div class="eyebrow">Калориен баланс</div>
@@ -596,6 +663,10 @@
     <button data-tab="food">
       <svg viewBox="0 0 24 24"><path d="M4 3v7a3 3 0 0 0 6 0V3M7 3v18M17 3c-1.7 0-3 2.5-3 5.5S15.3 14 17 14v7"/></svg>
       Храна
+    </button>
+    <button data-tab="scan">
+      <svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M4 17v2a1 1 0 0 0 1 1h2M20 7V5a1 1 0 0 0-1-1h-2M20 17v2a1 1 0 0 1-1 1h-2M4 12h16M8 12a4 4 0 0 0 8 0"/></svg>
+      Скенер
     </button>
     <button data-tab="balance">
       <svg viewBox="0 0 24 24"><path d="M12 3v18M5 8h14M6 8l-3 6a3 3 0 0 0 6 0zM18 8l-3 6a3 3 0 0 0 6 0z"/></svg>
@@ -1674,6 +1745,69 @@ function addManual(){
 }
 
 /* ============================================================
+   LABEL SCANNER — OCR-assisted macro/block calculator
+   Standard label math: protein_g/7, carbs_g/9, and
+   fat_g/1.5 (whole-food protein source, e.g. meat/cheese/fish)
+   or fat_g/3 (0-fat protein powder) — exactly the rule the user
+   supplied, matching their feta-cheese worked example. OCR
+   (Tesseract.js, loaded on demand) is best-effort only — every
+   field it fills in stays a normal, editable input.
+   ============================================================ */
+let scanSource='meat'; // 'meat' | 'powder'
+let tesseractLoadPromise=null;
+function scanFatDivisor(){ return scanSource==='powder' ? 3 : 1.5; }
+function scanLabelValues(){
+  return {
+    p: num(document.getElementById('scanProtein').value)||0,
+    c: num(document.getElementById('scanCarbs').value)||0,
+    f: num(document.getElementById('scanFat').value)||0,
+  };
+}
+function scanBlocksFor(p,c,f){ return { pB:p/7, cB:c/9, fB:f/scanFatDivisor() }; }
+function zBlocksTilesHtml(pB,cB,fB,pG,cG,fG){
+  return `<div class="zb"><span class="zbk">Протеин</span><span class="zbn num">${r1(pB)}</span><span class="zbu">блока · ${r1(pG)}г</span></div>
+    <div class="zb"><span class="zbk">Въглехидр.</span><span class="zbn num">${r1(cB)}</span><span class="zbu">блока · ${r1(cG)}г</span></div>
+    <div class="zb"><span class="zbk">Мазнини</span><span class="zbn num">${r1(fB)}</span><span class="zbu">блока · ${r1(fG)}г</span></div>`;
+}
+function renderScanBlocks(){
+  const b100=document.getElementById('scanBlocks100'); if(!b100) return;
+  const {p,c,f}=scanLabelValues();
+  const {pB,cB,fB}=scanBlocksFor(p,c,f);
+  b100.innerHTML=zBlocksTilesHtml(pB,cB,fB,p,c,f);
+  const div=scanFatDivisor();
+  document.getElementById('scanBreakdown').innerHTML=
+    `Протеин: ${r1(p)}г ÷ 7 = ${r1(pB)} блока<br>Въглехидрати: ${r1(c)}г ÷ 9 = ${r1(cB)} блока<br>Мазнини: ${r1(f)}г ÷ ${div} = ${r1(fB)} блока`;
+
+  const qty=num(document.getElementById('scanQty').value)||0;
+  const scale=qty/100;
+  const pP=p*scale, cP=c*scale, fP=f*scale;
+  const bl=scanBlocksFor(pP,cP,fP);
+  document.getElementById('scanBlocksPortion').innerHTML = qty>0
+    ? zBlocksTilesHtml(bl.pB,bl.cB,bl.fB,pP,cP,fP)
+    : '<div class="empty" style="padding:10px;grid-column:1/4">Въведи количество, за да видиш блоковете за твоята порция.</div>';
+}
+function loadTesseract(){
+  if(window.Tesseract) return Promise.resolve();
+  if(tesseractLoadPromise) return tesseractLoadPromise;
+  tesseractLoadPromise=new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    s.onload=resolve; s.onerror=()=>reject(new Error('load-failed'));
+    document.head.appendChild(s);
+  });
+  return tesseractLoadPromise;
+}
+function extractMacro(text,keywords){
+  const t=text.replace(/,/g,'.');
+  for(const kw of keywords){
+    const re=new RegExp(kw+'[^0-9]{0,18}([0-9]+(?:\\.[0-9]+)?)','i');
+    const m=t.match(re);
+    if(m) return parseFloat(m[1]);
+  }
+  return null;
+}
+
+/* ============================================================
    WATER / HYDRATION
    ============================================================ */
 function waterTarget(){ const kg=latestWeight()||80; return Math.round(kg*33/50)*50; } // ~33ml/kg, rounded to 50ml
@@ -1855,6 +1989,7 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
   if(tab==='weight') renderWeight();
   if(tab==='food') renderFood();
   if(tab==='balance') renderBalance();
+  if(tab==='scan') renderScanBlocks();
   window.scrollTo(0,0);
 });
 
@@ -1874,6 +2009,65 @@ document.getElementById('dbUnit').addEventListener('change',renderDbMacroFields)
 document.querySelectorAll('#dbTypePicker [data-dbtype]').forEach(b=>b.onclick=()=>{ dbType=b.dataset.dbtype; renderDbTypePicker(); });
 renderDbTypePicker();
 document.getElementById('pfSave').onclick=saveProfile;
+
+/* wire label scanner (static elements) */
+document.querySelectorAll('#scanSourceToggle [data-src]').forEach(b=>b.onclick=()=>{
+  scanSource=b.dataset.src;
+  document.querySelectorAll('#scanSourceToggle [data-src]').forEach(x=>x.classList.toggle('sel',x===b));
+  renderScanBlocks();
+});
+['scanProtein','scanCarbs','scanFat','scanQty'].forEach(id=>document.getElementById(id).addEventListener('input',renderScanBlocks));
+document.getElementById('scanCaptureBtn').onclick=()=>document.getElementById('scanFile').click();
+document.getElementById('scanFile').addEventListener('change',ev=>{
+  const file=ev.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    document.getElementById('scanPreview').src=reader.result;
+    document.getElementById('scanPreviewWrap').style.display='block';
+    document.getElementById('scanOcrStatus').textContent='';
+  };
+  reader.readAsDataURL(file);
+});
+document.getElementById('scanOcrBtn').onclick=async()=>{
+  const status=document.getElementById('scanOcrStatus');
+  const img=document.getElementById('scanPreview').src;
+  if(!img) return;
+  status.textContent='⏳ Зарежда разпознаване…';
+  try{
+    await loadTesseract();
+    status.textContent='🔎 Разчита текста…';
+    const { data:{ text } } = await Tesseract.recognize(img,'eng+bul');
+    const p=extractMacro(text,['белтъчини','протеини','protein']);
+    const c=extractMacro(text,['въглехидрати','carbohydrate']);
+    const f=extractMacro(text,['мазнини','fat']);
+    let found=0;
+    if(p!=null){ document.getElementById('scanProtein').value=p; found++; }
+    if(c!=null){ document.getElementById('scanCarbs').value=c; found++; }
+    if(f!=null){ document.getElementById('scanFat').value=f; found++; }
+    renderScanBlocks();
+    status.textContent = found
+      ? `✓ Разчетени ${found} от 3 стойности — провери и коригирай при нужда.`
+      : '⚠️ Не успях да разчета ясно — въведи числата ръчно долу.';
+  }catch(e){
+    status.textContent='⚠️ Разпознаването не проработи (провери интернет връзката) — въведи числата ръчно долу.';
+  }
+};
+document.getElementById('scanAddLog').onclick=()=>{
+  const name=document.getElementById('scanName').value.trim()||'От етикет';
+  const qty=num(document.getElementById('scanQty').value);
+  if(!(qty>0)){ toast('Въведи изядено количество'); return; }
+  const {p,c,f}=scanLabelValues();
+  if(p<=0 && c<=0 && f<=0){ toast('Въведи поне една стойност от етикета'); return; }
+  const scale=qty/100;
+  const pG=p*scale, cG=c*scale, fG=f*scale;
+  const {pB,cB,fB}=scanBlocksFor(pG,cG,fG);
+  const kcal=entryMacros(pB,cB,fB).kcal; // same convention addFood()/addManual() use, so totals stay consistent
+  state.food.push({ id:Date.now(), date:todayISO(), meal:currentMeal, name, qty, unit:'г', cat:'X', pB, cB, fB, kcal });
+  DB.set(K.food,state.food);
+  toast('Добавено в дневника ✓');
+  document.getElementById('scanName').value='';
+};
+renderScanBlocks();
 
 /* ============================================================
    INIT
