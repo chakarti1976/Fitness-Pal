@@ -369,6 +369,28 @@
   .alc-badge{font-size:10px;background:var(--accent-dim);color:var(--accent);border-radius:6px;padding:1px 5px;margin-left:5px;white-space:nowrap;font-weight:700}
   .alc-note{margin-top:10px;font-size:12px;padding:9px 11px;border-radius:10px;background:#3a2320;color:#ffb199;border:1px solid rgba(255,107,87,.25)}
 
+  /* ---- food search autocomplete ---- */
+  .food-search{position:relative}
+  .food-search>input{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:12px;font-size:14px}
+  .food-search>input:focus{outline:none;border-color:var(--accent)}
+  .food-suggest{position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--card-2);border:1px solid var(--line-2);border-radius:14px;max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:40;box-shadow:var(--shadow-float);display:none}
+  .food-suggest.open{display:block}
+  .fs-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;cursor:pointer;border-bottom:1px solid var(--line)}
+  .fs-item:last-child{border-bottom:none}
+  .fs-item:active{background:var(--ink-2)}
+  .fs-name{font-size:13.5px}
+  .fs-tag{font-size:10px;color:var(--muted);background:var(--ink-2);border-radius:6px;padding:3px 7px;flex:0 0 auto;font-weight:700}
+  .fs-empty{padding:14px;font-size:12.5px;color:var(--muted);text-align:center}
+
+  /* ---- add-your-own food to the database ---- */
+  .db-unit-row{display:flex;align-items:center;gap:10px;margin:10px 0}
+  .db-unit-row label{font-size:12px;color:var(--muted);flex:0 0 auto}
+  .db-unit-row select{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:9px;font-size:13px;color:var(--text)}
+  .db-type-picker{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+  .db-type-btn{background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:10px 6px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer}
+  .db-type-btn.sel{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+  .db-hint{font-size:11px;color:var(--muted-2);margin:2px 0 10px}
+
   /* ---- per-exercise progress chart ---- */
   .exprog-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow-card)}
   .exprog-card select{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:11px;font-size:14px;color:var(--text);margin-bottom:10px}
@@ -483,8 +505,10 @@
     <div class="meal-picker" id="mealPicker"></div>
 
     <div class="food-add">
-      <input list="foodOptions" id="foodPick" placeholder="Търси храна (напр. пилешки гърди)…" autocomplete="off">
-      <datalist id="foodOptions"></datalist>
+      <div class="food-search">
+        <input id="foodPick" type="text" placeholder="Търси храна (напр. кисело мляко)…" autocomplete="off">
+        <div id="foodSuggest" class="food-suggest"></div>
+      </div>
       <div class="food-qty-row">
         <input id="foodQty" type="text" inputmode="decimal" placeholder="колич.">
         <span id="foodUnit" class="food-unit">г</span>
@@ -501,6 +525,24 @@
         </div>
         <button id="manualAdd" class="btn-ghost">Добави ръчно</button>
       </div>
+      <button id="dbToggle" class="link-btn">+ Добави своя храна в базата</button>
+      <div id="dbBox" class="manual-box" style="display:none">
+        <input id="dbName" type="text" placeholder="Име на храната (напр. Овесена каша на мама)">
+        <div class="db-unit-row">
+          <label>Мерна единица</label>
+          <select id="dbUnit"><option value="г">грам (г)</option><option value="мл">милилитър (мл)</option><option value="бр">брой (бр)</option></select>
+        </div>
+        <div class="db-type-picker" id="dbTypePicker">
+          <button type="button" class="db-type-btn" data-dbtype="P">Протеин</button>
+          <button type="button" class="db-type-btn" data-dbtype="C">Въглехидрати</button>
+          <button type="button" class="db-type-btn" data-dbtype="F">Мазнини</button>
+          <button type="button" class="db-type-btn" data-dbtype="M">Смесена (П+В)</button>
+        </div>
+        <div id="dbMacroFields"></div>
+        <div class="db-hint">Виж стойностите от опаковката/етикета на храната.</div>
+        <button id="dbAdd" class="btn-ghost">Добави в базата</button>
+      </div>
+      <div id="customFoodList"></div>
     </div>
 
     <div id="foodTotals"></div>
@@ -593,7 +635,7 @@ const DB = {
     try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){ /* storage full or blocked */ }
   }
 };
-const K = { workouts:'elx_workouts', weights:'elx_weights', measure:'elx_measure', draft:'elx_draft', food:'elx_food', profile:'elx_profile', notes:'elx_daynotes', water:'elx_water', supplements:'elx_supplements' };
+const K = { workouts:'elx_workouts', weights:'elx_weights', measure:'elx_measure', draft:'elx_draft', food:'elx_food', profile:'elx_profile', notes:'elx_daynotes', water:'elx_water', supplements:'elx_supplements', customFoods:'elx_customfoods' };
 
 /* ============================================================
    PROGRAM DATA
@@ -807,7 +849,7 @@ function art(p){ const f=EX_ART[p]||EX_ART._default; return `<svg viewBox="0 0 1
 /* ============================================================
    STATE
    ============================================================ */
-let state = { workouts:[], weights:[], measure:[], draft:{}, food:[], profile:{}, notes:{}, water:[], supplements:{} };
+let state = { workouts:[], weights:[], measure:[], draft:{}, food:[], profile:{}, notes:{}, water:[], supplements:{}, customFoods:[] };
 let currentDay = 'puA';
 
 function vidUrl(en){ return 'https://www.youtube.com/results?search_query='+encodeURIComponent(en+' proper form technique'); }
@@ -1259,7 +1301,8 @@ document.getElementById('measureSave').onclick=()=>{
 function exportData(){
   const dump={ app:'tihomir-fitnes-dnevnik', version:2, exported:new Date().toISOString(),
     workouts:state.workouts, weights:state.weights, measure:state.measure,
-    food:state.food, profile:state.profile, notes:state.notes, water:state.water, supplements:state.supplements };
+    food:state.food, profile:state.profile, notes:state.notes, water:state.water, supplements:state.supplements,
+    customFoods:state.customFoods };
   const blob=new Blob([JSON.stringify(dump,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
@@ -1281,9 +1324,11 @@ function importData(file){
       if(d.notes && typeof d.notes==='object') state.notes=d.notes;
       if(Array.isArray(d.water)) state.water=d.water;
       if(d.supplements && typeof d.supplements==='object') state.supplements=d.supplements;
+      if(Array.isArray(d.customFoods)) state.customFoods=d.customFoods;
       DB.set(K.workouts,state.workouts); DB.set(K.weights,state.weights); DB.set(K.measure,state.measure);
       DB.set(K.food,state.food); DB.set(K.profile,state.profile); DB.set(K.notes,state.notes);
-      DB.set(K.water,state.water); DB.set(K.supplements,state.supplements);
+      DB.set(K.water,state.water); DB.set(K.supplements,state.supplements); DB.set(K.customFoods,state.customFoods);
+      rebuildFoodIndex();
       renderWorkout(); renderHistory(); renderWeight();
       toast('Архивът е зареден ✓');
     }catch(e){ toast('Невалиден файл'); }
@@ -1394,7 +1439,13 @@ const FOODS=[
   // ---- смесени (доп.) ----
   ['Айран (натурален)','M','г',350,300],['Гръцко кисело мляко 2%','M','г',78,225],
 ];
-const FOOD_MAP={}; FOODS.forEach(f=>FOOD_MAP[f[0]]=f);
+let FOOD_MAP={};
+function rebuildFoodIndex(){
+  FOOD_MAP={};
+  FOODS.forEach(f=>FOOD_MAP[f[0]]=f);
+  state.customFoods.forEach(f=>FOOD_MAP[f[0]]=f);
+}
+rebuildFoodIndex();
 /* "generous" low-density Zone vegetables — used only for the veggie-minimum nudge (excludes starchy carbs like potato/corn/beans/lentils/beetroot) */
 const VEGETABLE_SET=new Set(['Броколи','Гъби','Домати','Китайско зеле','Зеле прясно (сурово)','Зеле кисело (неготвено)','Карфиол',
   'Краставица','Краставички кисели','Моркови','Ряпа','Лук стар','Лук пресен','Патладжан','Чушки сурови','Чушки печени',
@@ -1424,13 +1475,9 @@ function renderMealPicker(){
   el.querySelectorAll('[data-meal]').forEach(b=>b.onclick=()=>{ currentMeal=b.dataset.meal; renderMealPicker(); });
 }
 function weightAsOf(date){ const w=state.weights.filter(x=>x.date<=date).sort((a,b)=>a.date<b.date?-1:1); return w.length?w[w.length-1].kg:latestWeight(); }
-let foodListReady=false;
 function renderFood(){
   renderMealPicker();
-  if(!foodListReady){
-    document.getElementById('foodOptions').innerHTML=FOODS.map(f=>`<option value="${f[0]}"></option>`).join('');
-    foodListReady=true;
-  }
+  renderCustomFoodList();
   const today=todayISO();
   const items=state.food.filter(e=>e.date===today);
   // totals
@@ -1489,6 +1536,119 @@ function foodPickChanged(){
   const f=FOOD_MAP[name]; const unitEl=document.getElementById('foodUnit'); const hint=document.getElementById('foodHint');
   if(f){ unitEl.textContent=f[2]; if(f[1]==='M') hint.textContent=`Смесена: ~1 П + 1 В блок на ${f[3]} ${f[2]}`; else { const t={P:'протеинов',C:'въглехидратен',F:'мазнинен'}[f[1]]; hint.textContent=`1 ${t} блок = ${f[3]} ${f[2]}`; } }
   else { unitEl.textContent='г'; hint.textContent=''; }
+}
+
+/* ============================================================
+   FOOD SEARCH — custom substring-matching autocomplete
+   (replaces native <datalist>, which only prefix-matches on
+   most mobile browsers and hides valid results like typing
+   "кисело" not finding "Гръцко кисело мляко").
+   ============================================================ */
+const FOOD_TYPE_LBL={P:'П',C:'В',F:'М',M:'П+В'};
+function foodMatches(q){
+  q=q.trim().toLowerCase();
+  if(!q) return [];
+  const starts=[], contains=[];
+  Object.values(FOOD_MAP).forEach(f=>{
+    const n=f[0].toLowerCase();
+    const i=n.indexOf(q);
+    if(i===0) starts.push(f); else if(i>0) contains.push(f);
+  });
+  const byName=(a,b)=>a[0].localeCompare(b[0],'bg');
+  starts.sort(byName); contains.sort(byName);
+  return [...starts,...contains].slice(0,25);
+}
+function renderFoodSuggest(){
+  const box=document.getElementById('foodSuggest');
+  const q=document.getElementById('foodPick').value;
+  if(!q.trim()){ box.innerHTML=''; box.classList.remove('open'); return; }
+  const matches=foodMatches(q);
+  box.innerHTML = matches.length
+    ? matches.map(f=>`<div class="fs-item" data-pick="${f[0].replace(/"/g,'&quot;')}"><span class="fs-name">${f[0]}</span><span class="fs-tag">${FOOD_TYPE_LBL[f[1]]||''}</span></div>`).join('')
+    : `<div class="fs-empty">Няма съвпадение — добави я с „+ Добави своя храна в базата“ по-долу.</div>`;
+  box.classList.add('open');
+  box.querySelectorAll('[data-pick]').forEach(it=>{
+    it.addEventListener('mousedown',ev=>{ ev.preventDefault(); }); // keep focus so click still fires, avoids losing tap on mobile
+    it.addEventListener('click',()=>{
+      document.getElementById('foodPick').value=it.dataset.pick;
+      box.innerHTML=''; box.classList.remove('open');
+      foodPickChanged();
+      document.getElementById('foodQty').focus();
+    });
+  });
+}
+
+/* ============================================================
+   ADD-YOUR-OWN FOOD TO THE DATABASE
+   User enters macros per 100г/100мл (or per 1 бр), and we derive
+   the same "grams per Zone block" figure the built-in database
+   uses (700г÷protein / 900г÷carbs / 150г÷fat, or the ×1/100
+   equivalents for a per-piece basis).
+   ============================================================ */
+let dbType='P';
+function renderDbTypePicker(){
+  document.querySelectorAll('#dbTypePicker [data-dbtype]').forEach(b=>b.classList.toggle('sel',b.dataset.dbtype===dbType));
+  renderDbMacroFields();
+}
+function renderDbMacroFields(){
+  const unitEl=document.getElementById('dbUnit'); if(!unitEl) return;
+  const unit=unitEl.value;
+  const basisLbl = unit==='бр' ? 'на 1 бр' : `на 100${unit}`;
+  const el=document.getElementById('dbMacroFields');
+  if(dbType==='M'){
+    el.innerHTML=`<div class="manual-blocks" style="grid-template-columns:1fr 1fr">
+      <div><label>Протеин (г) ${basisLbl}</label><input id="dbP" type="text" inputmode="decimal" placeholder="0"></div>
+      <div><label>Въгл. (г) ${basisLbl}</label><input id="dbC" type="text" inputmode="decimal" placeholder="0"></div>
+    </div>`;
+  } else {
+    const lbl = dbType==='P'?'Протеин':dbType==='C'?'Въглехидрати':'Мазнини';
+    el.innerHTML=`<div class="manual-blocks" style="grid-template-columns:1fr"><div><label>${lbl} (г) ${basisLbl}</label><input id="dbSingle" type="text" inputmode="decimal" placeholder="0"></div></div>`;
+  }
+}
+function addCustomFood(){
+  const name=document.getElementById('dbName').value.trim();
+  const unit=document.getElementById('dbUnit').value;
+  if(!name){ toast('Въведи име на храната'); return; }
+  const exists=Object.keys(FOOD_MAP).some(n=>n.toLowerCase()===name.toLowerCase());
+  if(exists){ toast('Вече има храна с това име'); return; }
+  const per100 = unit!=='бр';
+  const T100={P:700,C:900,F:150}, T1={P:7,C:9,F:1.5};
+  const calcN=(macroVal,type)=>{ const t=per100?T100[type]:T1[type]; return Math.round((t/macroVal)*10)/10; };
+  let entry;
+  if(dbType==='M'){
+    const p=num(document.getElementById('dbP').value), c=num(document.getElementById('dbC').value);
+    if(!(p>0) || !(c>0)){ toast('Въведи протеин и въглехидрати'); return; }
+    entry=[name,'M',unit,calcN(p,'P'),calcN(c,'C')];
+  } else {
+    const v=num(document.getElementById('dbSingle').value);
+    if(!(v>0)){ toast('Въведи стойност'); return; }
+    entry=[name,dbType,unit,calcN(v,dbType)];
+  }
+  state.customFoods.push(entry);
+  DB.set(K.customFoods,state.customFoods);
+  rebuildFoodIndex();
+  ['dbName','dbP','dbC','dbSingle'].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=''; });
+  renderCustomFoodList();
+  toast('Храната е добавена в базата ✓');
+}
+function removeCustomFood(name){
+  state.customFoods=state.customFoods.filter(f=>f[0]!==name);
+  DB.set(K.customFoods,state.customFoods);
+  rebuildFoodIndex();
+  renderCustomFoodList();
+}
+function renderCustomFoodList(){
+  const el=document.getElementById('customFoodList'); if(!el) return;
+  if(!state.customFoods.length){ el.innerHTML=''; return; }
+  const TYPE_LBL={P:'Протеин',C:'Въглехидрати',F:'Мазнини',M:'Смесена'};
+  el.innerHTML='<div class="eyebrow" style="margin-top:14px">Твоите добавени храни</div>'+state.customFoods.map(f=>{
+    const meta = f[1]==='M' ? `1 П блок = ${f[3]}${f[2]} · 1 В блок = ${f[4]}${f[2]}` : `${TYPE_LBL[f[1]]} · 1 блок = ${f[3]} ${f[2]}`;
+    return `<div class="lib-row">
+      <div class="lib-info"><div class="lib-name">${f[0]}</div><div class="lib-meta">${meta}</div></div>
+      <button class="ex-rm" data-dbdel="${f[0].replace(/"/g,'&quot;')}" title="Изтрий">×</button>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('[data-dbdel]').forEach(b=>b.onclick=()=>removeCustomFood(b.dataset.dbdel));
 }
 function addFood(){
   const name=document.getElementById('foodPick').value.trim();
@@ -1701,11 +1861,18 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
 document.querySelectorAll('.subtab').forEach(b=>b.onclick=()=>switchSub(b.dataset.sub));
 
 /* wire food + profile controls (static elements) */
-document.getElementById('foodPick').addEventListener('input',foodPickChanged);
+document.getElementById('foodPick').addEventListener('input',()=>{ foodPickChanged(); renderFoodSuggest(); });
+document.getElementById('foodPick').addEventListener('focus',renderFoodSuggest);
+document.getElementById('foodPick').addEventListener('blur',()=>{ setTimeout(()=>{ const b=document.getElementById('foodSuggest'); b.classList.remove('open'); },180); });
 document.getElementById('foodAdd').onclick=addFood;
 document.getElementById('foodQty').addEventListener('keydown',e=>{ if(e.key==='Enter') addFood(); });
 document.getElementById('manualToggle').onclick=()=>{ const b=document.getElementById('manualBox'); b.style.display=b.style.display==='none'?'block':'none'; };
 document.getElementById('manualAdd').onclick=addManual;
+document.getElementById('dbToggle').onclick=()=>{ const b=document.getElementById('dbBox'); b.style.display=b.style.display==='none'?'block':'none'; };
+document.getElementById('dbAdd').onclick=addCustomFood;
+document.getElementById('dbUnit').addEventListener('change',renderDbMacroFields);
+document.querySelectorAll('#dbTypePicker [data-dbtype]').forEach(b=>b.onclick=()=>{ dbType=b.dataset.dbtype; renderDbTypePicker(); });
+renderDbTypePicker();
 document.getElementById('pfSave').onclick=saveProfile;
 
 /* ============================================================
@@ -1721,6 +1888,8 @@ document.getElementById('pfSave').onclick=saveProfile;
   state.notes    = (await DB.get(K.notes))     || {};
   state.water    = (await DB.get(K.water))     || [];
   state.supplements = (await DB.get(K.supplements)) || {};
+  state.customFoods = (await DB.get(K.customFoods)) || [];
+  rebuildFoodIndex();
   renderDaySelector();
   renderWorkout();
   renderProgram();
