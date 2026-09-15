@@ -397,6 +397,9 @@
   .scan-card>input[type=text]:focus{outline:none;border-color:var(--accent)}
   .scan-preview{width:100%;max-height:260px;object-fit:contain;border-radius:12px;background:var(--ink-2);margin-top:12px;display:block}
   .scan-ocr-status{font-size:12px;color:var(--muted);margin-top:8px;min-height:14px}
+  .scan-ocr-raw-wrap{margin-top:10px}
+  .scan-ocr-raw-wrap summary{font-size:11.5px;color:var(--muted-2);cursor:pointer}
+  .scan-ocr-raw{margin-top:8px;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:10px;font-family:'Space Mono';font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-word;max-height:220px;overflow-y:auto}
   .scan-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
   .scan-fields label{font-size:10.5px;color:var(--muted);display:block;margin-bottom:5px}
   .scan-fields input{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:10px;font-family:'Space Mono';font-size:15px;text-align:center}
@@ -588,6 +591,10 @@
         <img id="scanPreview" class="scan-preview" alt="Снимка на етикет">
         <button class="btn-ghost" id="scanOcrBtn" style="margin-top:10px">🔎 Разчети числата от снимката</button>
         <div id="scanOcrStatus" class="scan-ocr-status"></div>
+        <details id="scanOcrRawWrap" class="scan-ocr-raw-wrap" style="display:none">
+          <summary>Покажи суровия разпознат текст (за диагностика)</summary>
+          <pre id="scanOcrRaw" class="scan-ocr-raw"></pre>
+        </details>
       </div>
     </div>
 
@@ -2061,6 +2068,9 @@ document.getElementById('scanFile').addEventListener('change',ev=>{
     document.getElementById('scanPreview').src=reader.result;
     document.getElementById('scanPreviewWrap').style.display='block';
     document.getElementById('scanOcrStatus').textContent='';
+    document.getElementById('scanOcrRawWrap').style.display='none';
+    document.getElementById('scanOcrRawWrap').open=false;
+    document.getElementById('scanOcrRaw').textContent='';
   };
   reader.readAsDataURL(file);
 });
@@ -2091,6 +2101,10 @@ document.getElementById('scanOcrBtn').onclick=async()=>{
     status.textContent = found
       ? `✓ Разчетени ${found} от 3 стойности — провери и коригирай при нужда.`
       : '⚠️ Не успях да разчета ясно — въведи числата ръчно долу.';
+    const rawWrap=document.getElementById('scanOcrRawWrap');
+    document.getElementById('scanOcrRaw').textContent=text.trim()||'(няма разпознат текст)';
+    rawWrap.style.display='block';
+    rawWrap.open=found<3; // auto-expand when something's missing, so it's obvious without an extra tap
   }catch(e){
     status.textContent='⚠️ Разпознаването не проработи (провери интернет връзката) — въведи числата ръчно долу.';
   }
