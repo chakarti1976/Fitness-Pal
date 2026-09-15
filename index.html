@@ -1832,7 +1832,13 @@ function extractMacro(text,keywords){
   for(const kw of keywords){
     const re=new RegExp(kw+'[^0-9]{0,25}([0-9]+(?:\\.[0-9]+)?)','i');
     const m=t.match(re);
-    if(m) return parseFloat(m[1]);
+    if(!m) continue;
+    const v=parseFloat(m[1]);
+    // grams of one macro per 100г/мл food can never reach 100 — a bigger
+    // number means OCR grabbed the wrong figure (e.g. the kJ energy value
+    // sitting on a nearby line), so skip it and try the next keyword
+    // rather than silently filling in something impossible.
+    if(v>=0 && v<100) return v;
   }
   return null;
 }
@@ -2066,7 +2072,14 @@ document.getElementById('scanOcrBtn').onclick=async()=>{
   try{
     await loadTesseract();
     status.textContent='🔎 Разчита текста… (първия път е по-бавно)';
-    const { data:{ text } } = await Tesseract.recognize(img,'eng+bul+fin+swe');
+    // PSM.SINGLE_BLOCK keeps each label line intact (name + number together);
+    // the default auto layout mode tends to split dense multi-language
+    // nutrition tables into separate blocks and can reorder them, which
+    // detaches a number from its own row.
+    const worker=await Tesseract.createWorker('eng+bul+fin+swe');
+    await worker.setParameters({ tessedit_pageseg_mode: Tesseract.PSM.SINGLE_BLOCK });
+    const { data:{ text } } = await worker.recognize(img);
+    await worker.terminate();
     const p=extractMacro(text,MACRO_KEYWORDS.P);
     const c=extractMacro(text,MACRO_KEYWORDS.C);
     const f=extractMacro(text,MACRO_KEYWORDS.F);
