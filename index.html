@@ -755,6 +755,7 @@ const PROGRAM = {
     ['abA4','Кабелен крънч','Cable Crunch','Кабел + въже (коленичил)',3,'12–15','Горен корем','cableCrunch'],
     ['abA5','Кабелна ротация','Cable Rotation','Кабел (на височина на кръста)',3,'12–15','Коси коремни','cableRotation'],
     ['abA6','Страничен планк','Side Plank','Постелка',3,'30–45 сек','Коси/талия','sidePlank'],
+    ['abA7','Машинен коремен крънч','Machine Abdominal Crunch','Коремна машина (Life Fitness)',3,'12–15','Горен корем','abMachine'],
   ]},
   puB:{name:'Push B', full:'Бутане B', focus:'Гърди · Рамене · Трицепс', ex:[
     ['puB1','Наклонена лег преса с щанга','Incline Barbell Bench Press','Лост + наклонена пейка/рак',4,'6–10','Гърди','benchIncline'],
@@ -865,6 +866,7 @@ const EX_ART={
   stomachVacuum:()=>`${G}<circle class="head" cx="60" cy="26" r="6"/><path class="fig" d="M60 32 V40 Q54 50 60 58 Q66 50 60 40"/><path class="fig" d="M60 58 l-7 18 M60 58 l7 18"/><path class="fig" d="M60 36 L48 44"/><path class="fig" d="M60 36 L72 44"/><text x="60" y="76" fill="#8494AB" font-size="9" font-family="Space Mono" text-anchor="middle">издишай</text>`,
   cableRotation:()=>`${G}<path class="grd" d="M100 16 V70"/><line class="eq" x1="100" y1="40" x2="66" y2="42"/><circle class="head" cx="54" cy="34" r="6"/><path class="fig" d="M54 40 V58"/><path class="fig" d="M54 58 l-7 18 M54 58 l7 18"/><path class="fig" d="M54 44 H30"/>${dn(24,44,60)}`,
   mcgillCurlUp:()=>`${G}<circle class="head" cx="26" cy="48" r="6"/><path class="fig" d="M32 50 H60"/><path class="fig" d="M60 50 L66 62 L64 74"/><path class="fig" d="M46 50 L44 62 L52 66"/>${up(30,44,34)}`,
+  abMachine:()=>`${G}<path class="grd" d="M94 10 V74"/><rect class="bench" x="86" y="32" width="10" height="32" rx="2"/><line class="eq" x1="58" y1="16" x2="94" y2="16"/><line class="eq" x1="58" y1="16" x2="54" y2="36"/><rect class="eqf" x="48" y="34" width="13" height="5" rx="2"/><rect class="bench" x="38" y="58" width="28" height="6" rx="2"/><path class="grd" d="M44 64 V74 M62 64 V74"/><circle class="head" cx="48" cy="32" r="6"/><path class="fig" d="M48 38 L56 56"/><path class="fig" d="M56 56 L50 58 M56 56 L68 60 L68 72"/><path class="fig" d="M48 42 L54 38"/><path class="arw" d="M38 42 q-1 11 8 15"/><path class="arw" d="M43 53 l2 6 l5 -2"/>`,
   _default:()=>`${G}<circle class="head" cx="60" cy="34" r="6"/><path class="fig" d="M60 40 V60 M60 60 l-7 16 M60 60 l7 16 M48 48 H72"/><rect class="eqf" x="44" y="45" width="4" height="8" rx="1"/><rect class="eqf" x="72" y="45" width="4" height="8" rx="1"/>`
 };
 /* muscle-highlight points per movement (teal dot on the figure) */
@@ -881,7 +883,8 @@ const HL={
   deadBug:[[50,46]], birdDog:[[55,60]], sidePlank:[[60,50]], palloffPress:[[58,46]],
   standingOblique:[[56,50]], suitcaseCarry:[[54,50]], cableWoodchop:[[52,50]],
   reverseCrunch:[[58,52]], ballCrunch:[[60,52]], bridgeMarch:[[52,50]],
-  stomachVacuum:[[60,42]], cableRotation:[[54,46]], mcgillCurlUp:[[46,54]]
+  stomachVacuum:[[60,42]], cableRotation:[[54,46]], mcgillCurlUp:[[46,54]],
+  abMachine:[[52,48]]
 };
 /* one-line form cue per movement */
 const CUES={
@@ -929,7 +932,8 @@ const CUES={
   bridgeMarch:'Тазът стабилен и вдигнат през цялото време; повдигай коляното без да килваш таза настрани.',
   stomachVacuum:'Издишай напълно и дръпни пъпа навътре към гръбнака; дишай леко и задръж позата.',
   cableRotation:'Ротацията идва от таза и торса с изправен гръб; контролирай връщането назад, без замах.',
-  mcgillCurlUp:'Ръка под извивката на кръста за опора; повдигни само главата и раменете на няколко см — без пълен коремен crunch.'
+  mcgillCurlUp:'Ръка под извивката на кръста за опора; повдигни само главата и раменете на няколко см — без пълен коремен crunch.',
+  abMachine:'Намести седалката спрямо оста; лакти на подложките, дръж леко; свий корема и дръпни гърдите към таза бавно.'
 };
 function hlMarks(p){ return (HL[p]||[]).map(([x,y])=>`<circle class="hl-glow" cx="${x}" cy="${y}" r="7"/><circle class="hl-dot" cx="${x}" cy="${y}" r="2.6"/>`).join(''); }
 function art(p){ const f=EX_ART[p]||EX_ART._default; return `<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">${f()}${hlMarks(p)}</svg>`; }
