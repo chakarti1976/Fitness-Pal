@@ -543,13 +543,13 @@ const PROGRAM = {
     ['plA5','Сгъване с EZ лост','EZ Bar Biceps Curl','EZ лост',3,'8–12','Бицепс','curl'],
     ['plA6','Чуково сгъване','Dumbbell Hammer Curl','Дъмбели',3,'10–12','Бицепс','hammerCurl'],
   ]},
-  lgA:{name:'Legs A', full:'Крака A', focus:'Крака · Корем', ex:[
-    ['lgA1','Клек с щанга','Barbell Back Squat','Клек-рак (стойка)',4,'6–10','Крака','squat'],
-    ['lgA2','Румънска тяга','Romanian Deadlift','Лост',3,'8–12','Задно бедро','rdl'],
-    ['lgA3','Напади с дъмбели','Walking Dumbbell Lunge','Дъмбели',3,'10–12','Крака','lunge'],
-    ['lgA4','Сгъване за задно бедро','Lying Leg Curl','Машина за задно бедро',3,'12–15','Задно бедро','legCurl'],
-    ['lgA5','Прасци прав','Standing Calf Raise','Машина за прасци (или Смит)',4,'12–20','Прасци','calfRaise'],
-    ['lgA6','Кабелен крънч','Cable Crunch','Кабел + въже (коленичил)',3,'12–15','Корем','cableCrunch'],
+  lgA:{name:'Корем A', full:'Корем A', focus:'Корем · Талия', ex:[
+    ['abA1','Планк','Plank','Постелка',3,'45–60 сек','Кор/напречен','plank'],
+    ['abA2','Вакуум на корема','Stomach Vacuum','Прав или легнал (без уред)',3,'15–20 сек','Напречен (талия)','vacuum'],
+    ['abA3','Висящо повдигане на крака','Hanging Leg Raise','Лост за набиране',3,'10–15','Долен корем','hangingLeg'],
+    ['abA4','Кабелен крънч','Cable Crunch','Кабел + въже (коленичил)',3,'12–15','Горен корем','cableCrunch'],
+    ['abA5','Руска извивка','Russian Twist','Диск/тежест (седнал на постелка)',3,'15–20','Коси коремни','russianTwist'],
+    ['abA6','Планк с докосване на рамо','Plank Shoulder Tap','Постелка',3,'16–20','Кор/анти-ротация','plankTap'],
   ]},
   puB:{name:'Push B', full:'Бутане B', focus:'Гърди · Рамене · Трицепс', ex:[
     ['puB1','Наклонена лег преса с щанга','Incline Barbell Bench Press','Лост + наклонена пейка/рак',4,'6–10','Гърди','benchIncline'],
@@ -624,6 +624,9 @@ const EX_ART={
   cablePullover:()=>`${G}<path class="grd" d="M96 12 V72"/><line class="eq" x1="96" y1="14" x2="70" y2="30"/><line class="eq" x1="62" y1="27" x2="74" y2="33"/><circle class="head" cx="44" cy="30" r="6"/><path class="fig" d="M44 36 L50 56"/><path class="fig" d="M50 56 l-6 20 M50 56 l6 20"/><path class="fig" d="M46 40 L68 30"/><path class="arw" d="M78 34 q7 16 -8 24"/><path class="arw" d="M66 56 l4 4 l2 -6"/>`,
   frontRaise:()=>`${G}<circle class="head" cx="48" cy="28" r="6"/><path class="fig" d="M48 34 V56"/><path class="fig" d="M48 56 l-7 20 M48 56 l7 20"/><path class="fig" d="M48 40 L72 40"/><rect class="eqf" x="70" y="35" width="5" height="10" rx="1"/>${up(90,54,38)}`,
   smithSquat:()=>`${G}<path class="grd" d="M32 8 V74 M88 8 V74"/><circle class="head" cx="60" cy="26" r="6"/><path class="fig" d="M60 32 V48"/><path class="fig" d="M60 48 L50 58 L52 76"/><path class="fig" d="M60 48 L70 58 L68 76"/><path class="fig" d="M46 34 H74"/><line class="eq" x1="32" y1="34" x2="88" y2="34"/><circle class="eqf" cx="46" cy="34" r="3"/><circle class="eqf" cx="74" cy="34" r="3"/>${up(100,54,36)}`,
+  vacuum:()=>`${G}<circle class="head" cx="58" cy="24" r="6"/><path class="fig" d="M58 30 C58 40 52 44 58 54"/><path class="fig" d="M58 54 l-6 22 M58 54 l6 22"/><path class="fig" d="M54 34 L50 54 M62 34 L66 54"/><path class="arw" d="M42 44 H52"/><path class="arw" d="M48 40 l5 4 l-5 4"/>`,
+  russianTwist:()=>`${G}<circle class="head" cx="44" cy="34" r="6"/><path class="fig" d="M47 38 L58 50"/><path class="fig" d="M58 50 L50 62 M58 50 L70 60"/><path class="fig" d="M50 44 L64 50 L58 56"/><rect class="eqf" x="60" y="47" width="9" height="8" rx="1.5"/><path class="arw" d="M72 40 a11 11 0 0 1 -15 3"/><path class="arw" d="M57 38 l0 6 l6 -2"/>`,
+  plankTap:()=>`${G}<circle class="head" cx="30" cy="48" r="5"/><path class="fig" d="M35 50 L86 60"/><path class="fig" d="M40 51 L40 66"/><path class="fig" d="M50 53 L46 44"/><path class="fig" d="M86 60 L90 74 M86 60 L82 74"/><path class="arw" d="M44 40 a7 7 0 0 1 8 2"/><path class="arw" d="M44 40 l0 4 l4 -1"/>`,
   _default:()=>`${G}<circle class="head" cx="60" cy="34" r="6"/><path class="fig" d="M60 40 V60 M60 60 l-7 16 M60 60 l7 16 M48 48 H72"/><rect class="eqf" x="44" y="45" width="4" height="8" rx="1"/><rect class="eqf" x="72" y="45" width="4" height="8" rx="1"/>`
 };
 /* muscle-highlight points per movement (teal dot on the figure) */
@@ -636,7 +639,8 @@ const HL={
   cableCrunch:[[55,53]], dip:[[58,40]], overheadTri:[[61,32]], plank:[[58,58]],
   deadlift:[[60,47]], dbRow:[[54,46]], reverseFly:[[56,42]], legPress:[[60,52]],
   splitSquat:[[47,56]], hipThrust:[[52,49]], legExtension:[[50,58]],
-  cablePullover:[[49,46]], frontRaise:[[51,40]], smithSquat:[[54,54],[66,54]]
+  cablePullover:[[49,46]], frontRaise:[[51,40]], smithSquat:[[54,54],[66,54]],
+  vacuum:[[55,44]], russianTwist:[[54,49]], plankTap:[[58,55]]
 };
 /* one-line form cue per movement */
 const CUES={
@@ -671,7 +675,10 @@ const CUES={
   legExtension:'Изпъни коленете контролирано до горе, задръж кратко и сваляй бавно.',
   cablePullover:'Ръцете почти изпънати, движение само в раменете; издърпай надолу в дъга и усети лата.',
   frontRaise:'Неутрален хват, лек завой в лакътя; вдигни право напред до височина на раменете, без замах.',
-  smithSquat:'Ходилата леко пред лоста; свали контролирано до паралел, петите заковани, гърди горе.'
+  smithSquat:'Ходилата леко пред лоста; свали контролирано до паралел, петите заковани, гърди горе.',
+  vacuum:'Издишай докрай и „залепи" пъпа към гръбнака; задръж дишайки плитко — свива талията отвътре.',
+  russianTwist:'Облегни леко назад с прав гръб; завърти торса (не само ръцете) и контролирай всяка страна.',
+  plankTap:'Тяло в права линия, без да люлееш таза; докосни срещуположното рамо бавно, стегнат корем.'
 };
 function hlMarks(p){ return (HL[p]||[]).map(([x,y])=>`<circle class="hl-glow" cx="${x}" cy="${y}" r="7"/><circle class="hl-dot" cx="${x}" cy="${y}" r="2.6"/>`).join(''); }
 function art(p){ const f=EX_ART[p]||EX_ART._default; return `<svg viewBox="0 0 120 84" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">${f()}${hlMarks(p)}</svg>`; }
